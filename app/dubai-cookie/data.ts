@@ -7,9 +7,9 @@ export const quizConfig: QuizConfig = {
   highlight: "두쫀쿠",
   subtitle: ["요즘 핫한 두바이 쫀득 쿠키로", "알아보는 내 성격 테스트!"],
   otherTests: [
+    { emoji: "⚔️", title: "나의 멘탈 HP 측정기", desc: "RPG 스탯으로 보는 내 멘탈!", href: "/mental-hp" },
     { emoji: "🍡", title: "나는 어떤 탕후루?", desc: "COMING SOON" },
     { emoji: "☕", title: "나는 어떤 카페 음료?", desc: "COMING SOON" },
-    { emoji: "🍙", title: "나는 어떤 편의점 디저트?", desc: "COMING SOON" },
   ],
   questions: [
     {

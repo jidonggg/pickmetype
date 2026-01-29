@@ -20,6 +20,14 @@ const tests = [
     gradient: "from-amber-500 via-orange-500 to-red-400",
   },
   {
+    id: "mental-hp",
+    emoji: "⚔️",
+    title: "나의 멘탈 HP 측정기",
+    subtitle: "RPG 스탯으로 보는 내 멘탈 상태",
+    available: true,
+    gradient: "from-emerald-500 via-green-500 to-teal-500",
+  },
+  {
     id: "tanghuru",
     emoji: "🍡",
     title: "나는 어떤 탕후루?",
