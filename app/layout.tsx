@@ -25,27 +25,14 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "나는 어떤 두쫀쿠? | 두바이 쫀득 쿠키 성격 테스트",
-  description:
-    "요즘 핫한 두바이 쫀득 쿠키로 알아보는 내 성격! 오리지널, 쿠앤크, 딸기, 말차... 나는 어떤 두쫀쿠일까?",
-  keywords: [
-    "두바이 쿠키",
-    "두쫀쿠",
-    "성격 테스트",
-    "심리 테스트",
-    "MBTI",
-    "바이럴 퀴즈",
-  ],
+  title: "pickmetype | 나의 유형 찾기",
+  description: "재미있는 성격 테스트 모음! 나의 유형을 찾아보세요.",
+  keywords: ["성격 테스트", "심리 테스트", "MBTI", "바이럴 퀴즈", "유형 테스트"],
   openGraph: {
-    title: "나는 어떤 두쫀쿠?",
-    description: "요즘 핫한 두바이 쫀득 쿠키로 알아보는 내 성격!",
+    title: "pickmetype | 나의 유형 찾기",
+    description: "재미있는 성격 테스트 모음!",
     type: "website",
     locale: "ko_KR",
-  },
-  twitter: {
-    card: "summary",
-    title: "나는 어떤 두쫀쿠?",
-    description: "요즘 핫한 두바이 쫀득 쿠키로 알아보는 내 성격!",
   },
 };
 
@@ -62,6 +49,10 @@ export default function RootLayout({
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7216959245416564"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://developers.kakao.com/sdk/js/kakao.min.js"
           strategy="afterInteractive"
         />
         {children}
