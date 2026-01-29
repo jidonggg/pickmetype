@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 
 // ==================== Types ====================
 type CookieType =
@@ -30,6 +30,8 @@ interface CookieResult {
   name: string;
   color: string;
   bgClass: string;
+  bgStart: string;
+  bgEnd: string;
   title: string;
   description: string;
   shortDesc: string;
@@ -138,6 +140,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "오리지널 두쫀쿠",
     color: "#B8860B",
     bgClass: "from-amber-100 via-orange-50 to-yellow-50",
+    bgStart: "#FEF3C7",
+    bgEnd: "#FEFCE8",
     title: "클래식은 이유가 있는 법 ✨",
     description:
       "피스타치오 크림에 바삭한 카다이프...\n정석이 정석인 이유, 바로 당신 같은 사람이 있기 때문!\n\n유행 타지 않는 변함없는 매력으로\n사람들이 결국 돌고 돌아 찾게 되는\n어디서든 믿고 보는 '인생 원픽' 같은 존재예요.",
@@ -151,6 +155,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "쿠앤크 두쫀쿠",
     color: "#2D2B55",
     bgClass: "from-slate-100 via-purple-50 to-indigo-50",
+    bgStart: "#F1F5F9",
+    bgEnd: "#EEF2FF",
     title: "겉쿨속진, 반전매력 치명적 💜",
     description:
       "겉은 쿨~하고 시크한데\n알고 보면 세상 다정하고 진한 사람!\n\n쉽게 속을 보여주지 않지만\n한번 마음 열면 누구보다 깊고 진해서\n상대를 홀려버리는 치명적인 타입.",
@@ -164,6 +170,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "딸기 두쫀쿠",
     color: "#E91E7B",
     bgClass: "from-pink-100 via-rose-50 to-red-50",
+    bgStart: "#FCE7F3",
+    bgEnd: "#FEF2F2",
     title: "어딜 가나 분위기 핑크빛 🌸",
     description:
       "당신이 있으면 분위기가 화사해지고\n당신이 없으면 뭔가 허전한,\n그런 사랑스러운 존재!\n\n밝은 에너지로 모두의 기분을\n업시켜주는 인기 만점 분위기 메이커.",
@@ -177,6 +185,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "말차 두쫀쿠",
     color: "#2E7D32",
     bgClass: "from-green-100 via-emerald-50 to-teal-50",
+    bgStart: "#DCFCE7",
+    bgEnd: "#F0FDFA",
     title: "트렌드는 내가 만든다 🌿",
     description:
       "핫플은 내가 먼저 가고\n유행은 내가 먼저 시작하는 사람!\n\n남들과 다른 독특한 취향과\n확실한 자기만의 감성으로\n주변 사람들의 워너비가 되는 힙스터.",
@@ -190,6 +200,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "누텔라 두쫀쿠",
     color: "#6D4C2E",
     bgClass: "from-orange-100 via-amber-50 to-yellow-50",
+    bgStart: "#FFEDD5",
+    bgEnd: "#FEFCE8",
     title: "한번 빠지면 못 나오는 중독성 🤎",
     description:
       "진하고 달콤한 매력으로\n한번 친해지면 절대 떠날 수 없게 만드는 사람!\n\n따뜻하고 다정한 성격에\n함께 있으면 마음이 포근해지는\n인간 핫초코 같은 존재.",
@@ -203,6 +215,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "로투스 두쫀쿠",
     color: "#C2703E",
     bgClass: "from-orange-100 via-yellow-50 to-amber-50",
+    bgStart: "#FFEDD5",
+    bgEnd: "#FFFBEB",
     title: "호불호 없는 만능 인기인 ⭐",
     description:
       "달콤하면서도 짭짤한 절묘한 매력!\n누구에게나 잘 맞는 팔방미인 타입.\n\n특유의 유머와 개성으로\n어떤 그룹에서든 자연스럽게 어울리며\n모두에게 사랑받는 인싸 중의 인싸!",
@@ -216,6 +230,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "흑임자 두쫀쿠",
     color: "#4A4A4A",
     bgClass: "from-stone-200 via-gray-100 to-neutral-50",
+    bgStart: "#E7E5E4",
+    bgEnd: "#FAFAFA",
     title: "알수록 빠져드는 깊은 매력 🌑",
     description:
       "고소하고 묵직한 매력의 소유자!\n처음엔 조용해 보이지만\n알면 알수록 빠져드는 깊이가 있는 사람.\n\n자기만의 세계가 확실하고\n혼자만의 시간을 즐길 줄 아는\n성숙하고 매력적인 어른.",
@@ -229,6 +245,8 @@ const cookieResults: Record<CookieType, CookieResult> = {
     name: "티라미수 두쫀쿠",
     color: "#7B5B3A",
     bgClass: "from-amber-100 via-stone-50 to-orange-50",
+    bgStart: "#FEF3C7",
+    bgEnd: "#FFF7ED",
     title: "은은하게 취하게 만드는 무드 🍷",
     description:
       "고급지고 우아한 분위기를 풍기는 당신!\n과하지 않은 은은한 매력으로\n사람들을 자연스럽게 끌어당기는 타입.\n\n센스 있고 감성적인 성격으로\n함께 있으면 왠지 모르게 설레는\n분위기 장인.",
@@ -257,18 +275,17 @@ function makeInitialScores(): Record<CookieType, number> {
 function AdBanner() {
   const pushed = useRef(false);
 
-  useEffect(() => {
-    if (pushed.current) return;
+  if (typeof window !== "undefined" && !pushed.current) {
     pushed.current = true;
     try {
-      ((window as unknown as Record<string, unknown[]>).adsbygoogle =
-        (window as unknown as Record<string, unknown[]>).adsbygoogle || []).push(
-        {}
-      );
+      (
+        (window as unknown as Record<string, unknown[]>).adsbygoogle =
+          (window as unknown as Record<string, unknown[]>).adsbygoogle || []
+      ).push({});
     } catch {
       /* noop */
     }
-  }, []);
+  }
 
   return (
     <div className="w-full flex justify-center my-4">
@@ -317,6 +334,7 @@ export default function QuizPage() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   const toast = useCallback((msg: string) => {
     setToastMsg(msg);
@@ -344,7 +362,6 @@ export default function QuizPage() {
         setCurrentQ((p) => p + 1);
         setIsAnimating(false);
       } else {
-        // find winner
         let max = 0;
         let winner: CookieType = "original";
         for (const t of ALL_TYPES) {
@@ -411,19 +428,62 @@ export default function QuizPage() {
     }
   };
 
+  const shareToInstagram = async () => {
+    if (!shareCardRef.current) return;
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(shareCardRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+      });
+      canvas.toBlob(
+        async (blob) => {
+          if (!blob) return;
+          const file = new File([blob], "my-dujjonku.png", {
+            type: "image/png",
+          });
+          if (
+            navigator.share &&
+            navigator.canShare?.({ files: [file] })
+          ) {
+            await navigator.share({
+              files: [file],
+              title: "나는 어떤 두쫀쿠?",
+              text: getShareText(),
+            });
+          } else {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "my-dujjonku.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            toast("이미지 저장 완료! 인스타에 공유해보세요 📸");
+          }
+        },
+        "image/png"
+      );
+    } catch {
+      toast("이미지 생성에 실패했어요 😢");
+    }
+  };
+
   // ========== INTRO ==========
   if (phase === "intro") {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center relative">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center relative px-4">
         <FloatingEmojis />
-        <div className="relative z-10 w-full max-w-lg mx-auto px-4 py-6 flex flex-col items-center">
+        <div className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center">
           <AdBanner />
 
-          <div className="w-full mt-4 mb-8 text-center animate-fade-in">
-            <div className="text-7xl mb-6 animate-bounce-slow">🍪</div>
+          <div className="w-full mt-2 mb-6 text-center animate-fade-in">
+            <div className="text-7xl mb-5 animate-bounce-slow">🍪</div>
 
             <h1
-              className="text-4xl md:text-5xl mb-3 leading-tight"
+              className="text-[2.5rem] leading-tight mb-3"
               style={{ fontFamily: "var(--font-display)" }}
             >
               나는 어떤
@@ -437,20 +497,20 @@ export default function QuizPage() {
               ?
             </h1>
 
-            <p className="text-gray-600 text-base md:text-lg mt-4">
+            <p className="text-gray-600 text-[15px] mt-3">
               요즘 핫한 두바이 쫀득 쿠키로
             </p>
-            <p className="text-gray-600 text-base md:text-lg mb-6">
+            <p className="text-gray-600 text-[15px] mb-5">
               알아보는 내 성격 테스트!
             </p>
 
             {/* cookie type preview */}
-            <div className="flex flex-wrap justify-center gap-2 mb-8 px-2">
+            <div className="flex flex-wrap justify-center gap-1.5 mb-6 px-1">
               {Object.values(cookieResults).map((c, i) => (
                 <span
                   key={i}
-                  className="inline-flex items-center gap-1 bg-white/70 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm shadow-sm animate-scale-in"
-                  style={{ animationDelay: `${i * 0.08}s` }}
+                  className="inline-flex items-center gap-1 bg-white/70 backdrop-blur-sm px-2.5 py-1 rounded-full text-[13px] shadow-sm animate-scale-in"
+                  style={{ animationDelay: `${i * 0.06}s` }}
                 >
                   {c.emoji} {c.name.replace(" 두쫀쿠", "")}
                 </span>
@@ -458,7 +518,7 @@ export default function QuizPage() {
             </div>
 
             {/* info badge */}
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-gray-500 mb-8 shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-gray-500 mb-6 shadow-sm">
               <span>📝 10문항</span>
               <span className="w-1 h-1 bg-gray-300 rounded-full" />
               <span>⚡ 1분 완성</span>
@@ -473,7 +533,7 @@ export default function QuizPage() {
             테스트 시작하기 🍪
           </button>
 
-          <p className="text-xs text-gray-400 mt-4 mb-8">
+          <p className="text-xs text-gray-400 mt-3 mb-6 pb-safe">
             결과는 재미로만 봐주세요 :)
           </p>
         </div>
@@ -490,16 +550,16 @@ export default function QuizPage() {
       <div className="min-h-[100dvh] flex flex-col items-center relative">
         <FloatingEmojis />
 
-        <div className="relative z-10 w-full max-w-lg mx-auto px-4 py-6">
+        <div className="relative z-10 w-full max-w-md mx-auto px-4 py-5">
           {/* progress */}
           <div className="w-full mb-2">
-            <div className="flex justify-between text-sm text-gray-500 mb-2">
+            <div className="flex justify-between text-sm text-gray-500 mb-1.5">
               <span className="font-medium">
                 {currentQ + 1} / {questions.length}
               </span>
               <span>{Math.round(progress)}%</span>
             </div>
-            <div className="w-full h-2.5 bg-white/50 rounded-full overflow-hidden shadow-inner">
+            <div className="w-full h-3 bg-white/50 rounded-full overflow-hidden shadow-inner">
               <div
                 className="progress-fill h-full bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 rounded-full"
                 style={{ width: `${progress}%` }}
@@ -510,27 +570,27 @@ export default function QuizPage() {
           {/* question card */}
           <div
             key={currentQ}
-            className={`mt-8 transition-all duration-300 ${
+            className={`mt-6 transition-all duration-300 ${
               isAnimating
                 ? "opacity-0 translate-x-8"
                 : "opacity-100 translate-x-0 animate-slide-up"
             }`}
           >
             <h2
-              className="text-2xl md:text-3xl text-center mb-8 leading-relaxed"
+              className="text-[22px] text-center mb-7 leading-relaxed"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {q.question}
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {q.answers.map((a, i) => (
                 <button
                   key={i}
                   onClick={() => handleAnswer(a.type)}
                   disabled={isAnimating}
-                  className="quiz-btn w-full py-4 px-5 bg-white/80 backdrop-blur-sm text-left rounded-2xl shadow-md hover:shadow-lg border-2 border-transparent hover:border-orange-200 transition-all duration-300 text-base md:text-lg font-medium animate-scale-in disabled:opacity-50"
-                  style={{ animationDelay: `${i * 0.08}s` }}
+                  className="quiz-btn w-full min-h-[56px] py-4 px-5 bg-white/80 backdrop-blur-sm text-left rounded-2xl shadow-md hover:shadow-lg border-2 border-transparent hover:border-orange-200 active:border-orange-300 active:bg-orange-50/50 transition-all duration-200 text-[15px] font-medium animate-scale-in disabled:opacity-50"
+                  style={{ animationDelay: `${i * 0.07}s` }}
                 >
                   {a.text}
                 </button>
@@ -550,21 +610,153 @@ export default function QuizPage() {
       <div
         className={`min-h-[100dvh] bg-gradient-to-b ${r.bgClass} relative`}
       >
-        <div className="relative z-10 w-full max-w-lg mx-auto px-4 py-6 flex flex-col items-center">
+        {/* Hidden share card for Instagram image capture */}
+        <div
+          ref={shareCardRef}
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            left: -9999,
+            top: 0,
+            width: 540,
+            height: 720,
+          }}
+        >
+          <div
+            style={{
+              width: 540,
+              height: 720,
+              background: `linear-gradient(160deg, ${r.bgStart} 0%, ${r.bgEnd} 100%)`,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "40px 36px",
+              position: "relative",
+              fontFamily: "var(--font-body)",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: 24,
+                right: 28,
+                opacity: 0.12,
+                fontSize: 36,
+              }}
+            >
+              🍪
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: 24,
+                left: 28,
+                opacity: 0.12,
+                fontSize: 36,
+              }}
+            >
+              🍪
+            </div>
+            <p
+              style={{
+                fontSize: 15,
+                color: "#999",
+                marginBottom: 20,
+                letterSpacing: 3,
+                fontWeight: 500,
+              }}
+            >
+              나의 두쫀쿠 유형
+            </p>
+            <div style={{ fontSize: 100, marginBottom: 16, lineHeight: 1 }}>
+              {r.emoji}
+            </div>
+            <h2
+              style={{
+                fontSize: 34,
+                fontWeight: 900,
+                color: r.color,
+                marginBottom: 8,
+                fontFamily: "var(--font-display)",
+              }}
+            >
+              {r.name}
+            </h2>
+            <p
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: r.color,
+                marginBottom: 28,
+                textAlign: "center",
+              }}
+            >
+              {r.title}
+            </p>
+            <p
+              style={{
+                fontSize: 15,
+                lineHeight: 1.7,
+                color: "#666",
+                textAlign: "center",
+                marginBottom: 28,
+              }}
+            >
+              {r.shortDesc}
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 8,
+                justifyContent: "center",
+              }}
+            >
+              {r.tags.map((tag, i) => (
+                <span
+                  key={i}
+                  style={{
+                    background: r.color,
+                    color: "#fff",
+                    padding: "6px 16px",
+                    borderRadius: 999,
+                    fontSize: 13,
+                    fontWeight: 600,
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <p
+              style={{
+                fontSize: 12,
+                color: "#bbb",
+                position: "absolute",
+                bottom: 28,
+              }}
+            >
+              나는 어떤 두쫀쿠? 🍪 테스트 하러가기!
+            </p>
+          </div>
+        </div>
+
+        <div className="relative z-10 w-full max-w-md mx-auto px-4 py-6 flex flex-col items-center">
           {/* header */}
           <div className="w-full text-center animate-fade-in">
             <p className="text-sm text-gray-500 mb-2 font-medium tracking-wide">
               당신의 두쫀쿠 유형은...
             </p>
-            <div className="text-8xl my-6 animate-bounce-slow">{r.emoji}</div>
+            <div className="text-8xl my-5 animate-bounce-slow">{r.emoji}</div>
             <h1
-              className="text-3xl md:text-4xl mb-2"
+              className="text-3xl mb-1.5"
               style={{ fontFamily: "var(--font-display)", color: r.color }}
             >
               {r.name}
             </h1>
             <p
-              className="text-xl md:text-2xl font-bold mb-6"
+              className="text-xl font-bold mb-5"
               style={{ color: r.color }}
             >
               {r.title}
@@ -572,15 +764,15 @@ export default function QuizPage() {
           </div>
 
           {/* description card */}
-          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg mb-5 animate-slide-up">
-            <p className="text-base md:text-lg leading-relaxed whitespace-pre-line text-gray-700">
+          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up">
+            <p className="text-[15px] leading-relaxed whitespace-pre-line text-gray-700">
               {r.description}
             </p>
-            <div className="flex flex-wrap gap-2 mt-5">
+            <div className="flex flex-wrap gap-1.5 mt-4">
               {r.tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1.5 rounded-full text-sm font-medium text-white"
+                  className="px-3 py-1.5 rounded-full text-[13px] font-medium text-white"
                   style={{ backgroundColor: r.color }}
                 >
                   {tag}
@@ -591,60 +783,67 @@ export default function QuizPage() {
 
           {/* compatibility */}
           <div
-            className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg mb-5 animate-slide-up"
-            style={{ animationDelay: "0.15s" }}
+            className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up"
+            style={{ animationDelay: "0.12s" }}
           >
             <h3
-              className="text-lg font-bold mb-4"
+              className="text-lg font-bold mb-3"
               style={{ fontFamily: "var(--font-display)" }}
             >
               궁합 보기 💕
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               <div className="flex items-center gap-3 bg-pink-50 p-3 rounded-xl">
                 <span className="text-sm font-bold text-pink-500 whitespace-nowrap">
                   찰떡궁합
                 </span>
-                <span className="text-base">{r.bestMatch}</span>
+                <span className="text-[15px]">{r.bestMatch}</span>
               </div>
               <div className="flex items-center gap-3 bg-purple-50 p-3 rounded-xl">
                 <span className="text-sm font-bold text-purple-500 whitespace-nowrap">
                   환장조합
                 </span>
-                <span className="text-base">{r.funMatch}</span>
+                <span className="text-[15px]">{r.funMatch}</span>
               </div>
             </div>
           </div>
 
           {/* share */}
           <div
-            className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg mb-5 animate-slide-up"
-            style={{ animationDelay: "0.25s" }}
+            className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up"
+            style={{ animationDelay: "0.2s" }}
           >
             <h3
-              className="text-lg font-bold mb-4 text-center"
+              className="text-lg font-bold mb-3 text-center"
               style={{ fontFamily: "var(--font-display)" }}
             >
               친구한테 공유하기 📢
             </h3>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-2">
               <button
                 onClick={shareNative}
-                className="quiz-btn flex flex-col items-center gap-2 py-3 px-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-2xl font-bold text-sm transition-colors"
+                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-2xl font-bold text-[12px] transition-colors"
               >
                 <span className="text-2xl">💬</span>
                 카카오톡
               </button>
               <button
+                onClick={shareToInstagram}
+                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white rounded-2xl font-bold text-[12px] transition-colors"
+              >
+                <span className="text-2xl">📸</span>
+                인스타
+              </button>
+              <button
                 onClick={shareToX}
-                className="quiz-btn flex flex-col items-center gap-2 py-3 px-2 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-bold text-sm transition-colors"
+                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-bold text-[12px] transition-colors"
               >
                 <span className="text-2xl">𝕏</span>
                 트위터
               </button>
               <button
                 onClick={copyLink}
-                className="quiz-btn flex flex-col items-center gap-2 py-3 px-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold text-sm transition-colors"
+                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold text-[12px] transition-colors"
               >
                 <span className="text-2xl">🔗</span>
                 링크복사
@@ -658,7 +857,7 @@ export default function QuizPage() {
           {/* restart */}
           <button
             onClick={handleRestart}
-            className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-amber-500 via-orange-500 to-red-400 text-white text-lg font-bold rounded-2xl shadow-lg shadow-orange-200/50 hover:shadow-xl transition-all duration-300 mb-6"
+            className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-amber-500 via-orange-500 to-red-400 text-white text-lg font-bold rounded-2xl shadow-lg shadow-orange-200/50 hover:shadow-xl transition-all duration-300 mb-5"
             style={{ fontFamily: "var(--font-display)" }}
           >
             다시 하기 🔄
@@ -666,16 +865,16 @@ export default function QuizPage() {
 
           {/* other tests */}
           <div
-            className="w-full mb-8 animate-slide-up"
-            style={{ animationDelay: "0.35s" }}
+            className="w-full mb-6 animate-slide-up"
+            style={{ animationDelay: "0.3s" }}
           >
             <h3
-              className="text-xl font-bold text-center mb-4"
+              className="text-xl font-bold text-center mb-3"
               style={{ fontFamily: "var(--font-display)" }}
             >
               다른 테스트도 해볼래? 🧪
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {otherTests.map((t, i) => (
                 <div
                   key={i}
@@ -683,7 +882,9 @@ export default function QuizPage() {
                 >
                   <span className="text-3xl">{t.emoji}</span>
                   <div className="flex-1">
-                    <p className="font-bold text-gray-800">{t.title}</p>
+                    <p className="font-bold text-gray-800 text-[15px]">
+                      {t.title}
+                    </p>
                     <p className="text-xs text-orange-500 font-bold">
                       {t.desc}
                     </p>
@@ -693,7 +894,7 @@ export default function QuizPage() {
             </div>
           </div>
 
-          <p className="text-xs text-gray-400 text-center mb-8">
+          <p className="text-xs text-gray-400 text-center mb-4 pb-safe">
             이 테스트는 재미로 만들어졌으며 과학적 근거는 없습니다 :)
           </p>
         </div>
