@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, #fff8f0 0%, #f5e6d3 50%, #ffe8d6 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: #2d2d2d;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4a574;
+  border-radius: 2px;
+}
+
+.quiz-btn {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+.quiz-btn:active {
+  @apply scale-95;
+}
+
+.floating-emoji {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  font-size: 2rem;
+}
+
+.progress-fill {
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.toast {
+  @apply fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full text-sm font-medium shadow-lg z-50;
+  animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 1.7s forwards;
+}
+
+@keyframes toastIn {
+  0% { opacity: 0; transform: translate(-50%, 20px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes toastOut {
+  0% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 20px); }
+}
