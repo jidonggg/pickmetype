@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 
 // ==================== Types ====================
 type CookieType =
@@ -272,26 +272,33 @@ function makeInitialScores(): Record<CookieType, number> {
 }
 
 // ==================== Ad Component ====================
-function AdBanner() {
+function AdBanner({ className }: { className?: string }) {
+  const adRef = useRef<HTMLModElement>(null);
   const pushed = useRef(false);
 
-  if (typeof window !== "undefined" && !pushed.current) {
-    pushed.current = true;
-    try {
-      (
-        (window as unknown as Record<string, unknown[]>).adsbygoogle =
-          (window as unknown as Record<string, unknown[]>).adsbygoogle || []
-      ).push({});
-    } catch {
-      /* noop */
-    }
-  }
+  useEffect(() => {
+    if (pushed.current) return;
+    // DOM에 ins 태그가 렌더된 후 push
+    const timer = setTimeout(() => {
+      pushed.current = true;
+      try {
+        (
+          (window as unknown as Record<string, unknown[]>).adsbygoogle =
+            (window as unknown as Record<string, unknown[]>).adsbygoogle || []
+        ).push({});
+      } catch {
+        /* noop */
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="w-full flex justify-center my-4">
+    <div className={`w-full flex justify-center my-4 ${className ?? ""}`}>
       <ins
+        ref={adRef}
         className="adsbygoogle"
-        style={{ display: "block", width: "100%", maxWidth: 400 }}
+        style={{ display: "block", width: "100%", maxWidth: 400, minHeight: 50 }}
         data-ad-client="ca-pub-7216959245416564"
         data-ad-slot="9023622451"
         data-ad-format="auto"
