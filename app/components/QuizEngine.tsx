@@ -231,6 +231,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
   const shareToInstagram = async () => {
     if (!shareCardRef.current) return;
     try {
+      await document.fonts.ready;
       const html2canvas = (await import("html2canvas")).default;
       const canvas = await html2canvas(shareCardRef.current, {
         scale: 2,
@@ -422,7 +423,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
               justifyContent: "center",
               padding: "40px 36px",
               position: "relative",
-              fontFamily: "var(--font-body)",
+              fontFamily: "'Noto Sans KR', sans-serif",
             }}
           >
             <div style={{ position: "absolute", top: 24, right: 28, opacity: 0.12, fontSize: 36 }}>
@@ -435,7 +436,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
               나의 유형은
             </p>
             <div style={{ fontSize: 100, marginBottom: 16, lineHeight: 1 }}>{r.emoji}</div>
-            <h2 style={{ fontSize: 34, fontWeight: 900, color: r.color, marginBottom: 8, fontFamily: "var(--font-display)" }}>
+            <h2 style={{ fontSize: 34, fontWeight: 900, color: r.color, marginBottom: 8, fontFamily: "'Black Han Sans', sans-serif" }}>
               {r.name}
             </h2>
             <p style={{ fontSize: 18, fontWeight: 700, color: r.color, marginBottom: 28, textAlign: "center" }}>
