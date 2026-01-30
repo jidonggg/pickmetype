@@ -14,6 +14,14 @@ export const metadata: Metadata = {
 
 const tests = [
   {
+    id: "animal-face",
+    emoji: "🐾",
+    title: "AI 닮은 동물상 분석기",
+    subtitle: "AI가 분석하는 내 동물상!",
+    available: true,
+    gradient: "from-violet-500 via-purple-500 to-indigo-500",
+  },
+  {
     id: "dubai-cookie",
     emoji: "🍪",
     title: "나는 어떤 두쫀쿠?",
