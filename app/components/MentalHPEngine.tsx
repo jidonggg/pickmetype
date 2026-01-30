@@ -493,243 +493,74 @@ export default function MentalHPEngine() {
         <div
           ref={shareCardRef}
           aria-hidden="true"
-          style={{
-            position: "fixed",
-            left: -9999,
-            top: 0,
-            width: 540,
-            height: 720,
-          }}
+          style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}
         >
           <div
             style={{
               width: 540,
               height: 720,
-              background:
-                "linear-gradient(160deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)",
+              background: "linear-gradient(160deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)",
               display: "flex",
               flexDirection: "column",
-              padding: "28px",
+              padding: "24px 28px",
               fontFamily: "'Noto Sans KR', sans-serif",
               color: "#fff",
               position: "relative",
             }}
           >
-            <div style={{ textAlign: "center", marginBottom: 12 }}>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#666",
-                  letterSpacing: 3,
-                  marginBottom: 4,
-                }}
-              >
-                MENTAL HP STATUS
+            {/* 브랜딩 헤더 */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <p style={{ fontSize: 14, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif" }}>
+                pick<span style={{ color: "#4ade80" }}>me</span>type
               </p>
-              <p
-                style={{
-                  fontSize: 32,
-                  fontWeight: 900,
-                  color: grade.color,
-                  fontFamily: "'Black Han Sans', sans-serif",
-                }}
-              >
-                {grade.grade}등급 {grade.emoji}
+              <p style={{ fontSize: 11, color: "#555", letterSpacing: 2 }}>MENTAL HP STATUS</p>
+            </div>
+            {/* 등급 + 이름 */}
+            <div style={{ textAlign: "center", marginBottom: 14 }}>
+              <p style={{ fontSize: 36, fontWeight: 900, color: grade.color, fontFamily: "'Black Han Sans', sans-serif", marginBottom: 4 }}>
+                {grade.emoji} {grade.grade}등급
               </p>
               <p style={{ fontSize: 14, color: "#aaa" }}>{grade.title}</p>
             </div>
-
-            <div
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                borderRadius: 14,
-                padding: "16px",
-                border: "1px solid rgba(255,255,255,0.1)",
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: 10,
-                }}
-              >
-                <div>
-                  <p
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 900,
-                      fontFamily: "'Black Han Sans', sans-serif",
-                    }}
-                  >
-                    ⚔️ {displayName}의 상태창
-                  </p>
-                  <p style={{ fontSize: 12, color: "#888" }}>
-                    {displayAge ? `LV.${displayAge}` : "LV.??"} | 직업: {job}
-                  </p>
-                </div>
+            {/* 상태창 카드 */}
+            <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 16, padding: "14px 16px", border: "1px solid rgba(255,255,255,0.1)", flex: 1, display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <p style={{ fontSize: 16, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif" }}>⚔️ {displayName}의 상태창</p>
+                <p style={{ fontSize: 11, color: "#888" }}>{displayAge ? `LV.${displayAge}` : "LV.??"} | {job}</p>
               </div>
-
-              {[
-                {
-                  l: "HP",
-                  v: stats.hp,
-                  c: getHPColor(stats.hp),
-                },
-                { l: "MP", v: stats.mp, c: "#60a5fa" },
-              ].map((bar) => (
-                <div
-                  key={bar.l}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    marginBottom: 4,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      width: 24,
-                      color: bar.c,
-                    }}
-                  >
-                    {bar.l}
-                  </span>
-                  <div
-                    style={{
-                      flex: 1,
-                      height: 12,
-                      background: "rgba(255,255,255,0.05)",
-                      borderRadius: 6,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${bar.v}%`,
-                        height: "100%",
-                        background: bar.c,
-                        borderRadius: 6,
-                      }}
-                    />
+              {[{ l: "HP", v: stats.hp, c: getHPColor(stats.hp) }, { l: "MP", v: stats.mp, c: "#60a5fa" }].map((bar) => (
+                <div key={bar.l} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, width: 24, color: bar.c }}>{bar.l}</span>
+                  <div style={{ flex: 1, height: 12, background: "rgba(255,255,255,0.05)", borderRadius: 6, overflow: "hidden" }}>
+                    <div style={{ width: `${bar.v}%`, height: "100%", background: bar.c, borderRadius: 6 }} />
                   </div>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: "#aaa",
-                      width: 44,
-                      textAlign: "right",
-                    }}
-                  >
-                    {bar.v}/100
-                  </span>
+                  <span style={{ fontSize: 11, color: "#aaa", width: 44, textAlign: "right" }}>{bar.v}/100</span>
                 </div>
               ))}
-
-              <div
-                style={{
-                  height: 1,
-                  background: "rgba(255,255,255,0.1)",
-                  margin: "8px 0",
-                }}
-              />
-
+              <div style={{ height: 1, background: "rgba(255,255,255,0.1)", margin: "6px 0" }} />
               {Object.entries(STAT_META).map(([key, meta]) => (
-                <div
-                  key={key}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    marginBottom: 3,
-                  }}
-                >
-                  <span style={{ fontSize: 11, width: 64, color: "#aaa" }}>
-                    {meta.emoji} {meta.label}
-                  </span>
-                  <div
-                    style={{
-                      flex: 1,
-                      height: 8,
-                      background: "rgba(255,255,255,0.05)",
-                      borderRadius: 4,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${stats[key]}%`,
-                        height: "100%",
-                        background: meta.color,
-                        borderRadius: 4,
-                      }}
-                    />
+                <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+                  <span style={{ fontSize: 11, width: 60, color: "#aaa" }}>{meta.emoji} {meta.label}</span>
+                  <div style={{ flex: 1, height: 8, background: "rgba(255,255,255,0.05)", borderRadius: 4, overflow: "hidden" }}>
+                    <div style={{ width: `${stats[key]}%`, height: "100%", background: meta.color, borderRadius: 4 }} />
                   </div>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: "#888",
-                      width: 26,
-                      textAlign: "right",
-                    }}
-                  >
-                    {stats[key]}
-                  </span>
+                  <span style={{ fontSize: 11, color: "#888", width: 26, textAlign: "right" }}>{stats[key]}</span>
                 </div>
               ))}
-
-              <div
-                style={{
-                  height: 1,
-                  background: "rgba(255,255,255,0.1)",
-                  margin: "8px 0",
-                }}
-              />
-
-              <div style={{ fontSize: 12, color: "#aaa", lineHeight: 1.9 }}>
-                <p>
-                  🏷️ 칭호:{" "}
-                  <span style={{ color: grade.color, fontWeight: 700 }}>
-                    『{titleText}』
-                  </span>
-                </p>
-                <p>
-                  ✨ 버프:{" "}
-                  <span style={{ color: "#4ade80" }}>{buffs.join(", ")}</span>
-                </p>
-                <p>
-                  💀 디버프:{" "}
-                  <span style={{ color: "#f87171" }}>{debuffs.join(", ")}</span>
-                </p>
-                <p>
-                  📍 예상 생존:{" "}
-                  <span style={{ color: "#facc15" }}>
-                    {survivalDays > 0 ? `${survivalDays}일` : "Game Over"}
-                  </span>
-                </p>
-                <p>
-                  💊 추천 회복템:{" "}
-                  <span style={{ color: "#60a5fa" }}>{recovery}</span>
-                </p>
+              <div style={{ height: 1, background: "rgba(255,255,255,0.1)", margin: "6px 0" }} />
+              <div style={{ fontSize: 12, color: "#aaa", lineHeight: 1.8 }}>
+                <p>🏷️ 칭호: <span style={{ color: grade.color, fontWeight: 700 }}>『{titleText}』</span></p>
+                <p>✨ 버프: <span style={{ color: "#4ade80" }}>{buffs.join(", ")}</span></p>
+                <p>💀 디버프: <span style={{ color: "#f87171" }}>{debuffs.join(", ")}</span></p>
+                <p>📍 생존: <span style={{ color: "#facc15" }}>{survivalDays > 0 ? `${survivalDays}일` : "Game Over"}</span> | 💊 회복템: <span style={{ color: "#60a5fa" }}>{recovery}</span></p>
               </div>
             </div>
-
-            <p
-              style={{
-                fontSize: 10,
-                color: "#444",
-                textAlign: "center",
-                marginTop: 12,
-              }}
-            >
-              pickmetype.vercel.app
-            </p>
+            {/* 하단 CTA */}
+            <div style={{ textAlign: "center", marginTop: 12 }}>
+              <div style={{ background: "#4ade80", color: "#0f0f23", borderRadius: 10, padding: "8px 0", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                나도 측정하기 → pickmetype.vercel.app
+              </div>
+            </div>
           </div>
         </div>
 

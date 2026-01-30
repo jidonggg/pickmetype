@@ -457,13 +457,7 @@ export default function MarketCapEngine() {
         <div
           ref={shareCardRef}
           aria-hidden="true"
-          style={{
-            position: "fixed",
-            left: -9999,
-            top: 0,
-            width: 540,
-            height: 720,
-          }}
+          style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}
         >
           <div
             style={{
@@ -472,246 +466,73 @@ export default function MarketCapEngine() {
               background: "#ffffff",
               display: "flex",
               flexDirection: "column",
-              padding: "28px",
+              padding: "24px 28px",
               fontFamily: "'Noto Sans KR', sans-serif",
               color: "#1f2937",
               position: "relative",
             }}
           >
-            {/* Header */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 16,
-                paddingBottom: 12,
-                borderBottom: "2px solid #e5e7eb",
-              }}
-            >
+            {/* 브랜딩 헤더 */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, paddingBottom: 12, borderBottom: "2px solid #e5e7eb" }}>
               <div>
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: "#9ca3af",
-                    letterSpacing: 2,
-                    marginBottom: 2,
-                  }}
-                >
-                  MARKET CAP REPORT
+                <p style={{ fontSize: 14, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif", marginBottom: 2 }}>
+                  pick<span style={{ color: "#10b981" }}>me</span>type
                 </p>
-                <p
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 900,
-                    fontFamily: "'Black Han Sans', sans-serif",
-                  }}
-                >
-                  {displayName} 분석 리포트
+                <p style={{ fontSize: 20, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif" }}>
+                  📊 {displayName} 분석 리포트
                 </p>
               </div>
               <div style={{ textAlign: "right" }}>
                 <p style={{ fontSize: 10, color: "#9ca3af" }}>{dateStr}</p>
-                <p style={{ fontSize: 10, color: "#9ca3af" }}>
-                  AI증권 리서치센터
-                </p>
+                <p style={{ fontSize: 10, color: "#9ca3af" }}>AI증권 리서치센터</p>
               </div>
             </div>
-
-            {/* Market Cap */}
-            <div
-              style={{
-                background: "#f9fafb",
-                borderRadius: 12,
-                padding: "16px",
-                marginBottom: 12,
-                border: "1px solid #e5e7eb",
-              }}
-            >
-              <p style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>
-                시가총액
-              </p>
-              <p
-                style={{
-                  fontSize: 28,
-                  fontWeight: 900,
-                  fontFamily: "'Black Han Sans', sans-serif",
-                  color: "#111827",
-                }}
-              >
-                {marketCap.display}
-              </p>
-              <p
-                style={{
-                  fontSize: 13,
-                  color: changePercent >= 0 ? "#ef4444" : "#3b82f6",
-                  fontWeight: 700,
-                }}
-              >
-                {changePercent >= 0 ? "▲" : "▼"}{" "}
-                {Math.abs(changePercent).toFixed(1)}% (어제 대비)
+            {/* 시가총액 */}
+            <div style={{ background: "#f9fafb", borderRadius: 14, padding: "14px 16px", marginBottom: 10, border: "1px solid #e5e7eb" }}>
+              <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 4 }}>시가총액</p>
+              <p style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif", color: "#111827", marginBottom: 2 }}>{marketCap.display}</p>
+              <p style={{ fontSize: 13, color: changePercent >= 0 ? "#ef4444" : "#3b82f6", fontWeight: 700 }}>
+                {changePercent >= 0 ? "▲" : "▼"} {Math.abs(changePercent).toFixed(1)}% (어제 대비)
               </p>
             </div>
-
-            {/* Info Grid */}
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                marginBottom: 12,
-              }}
-            >
-              <div
-                style={{
-                  flex: 1,
-                  background: "#f9fafb",
-                  borderRadius: 10,
-                  padding: "10px",
-                  border: "1px solid #e5e7eb",
-                }}
-              >
-                <p style={{ fontSize: 10, color: "#9ca3af" }}>등급</p>
-                <p
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: grade.color,
-                  }}
-                >
-                  {grade.emoji} {grade.grade}
-                </p>
-              </div>
-              <div
-                style={{
-                  flex: 1,
-                  background: "#f9fafb",
-                  borderRadius: 10,
-                  padding: "10px",
-                  border: "1px solid #e5e7eb",
-                }}
-              >
-                <p style={{ fontSize: 10, color: "#9ca3af" }}>투자의견</p>
-                <p
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: grade.opinionColor,
-                  }}
-                >
-                  {grade.opinion}
-                </p>
-              </div>
-              <div
-                style={{
-                  flex: 1,
-                  background: "#f9fafb",
-                  borderRadius: 10,
-                  padding: "10px",
-                  border: "1px solid #e5e7eb",
-                }}
-              >
-                <p style={{ fontSize: 10, color: "#9ca3af" }}>신용등급</p>
-                <p
-                  style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}
-                >
-                  {creditGrade}
-                </p>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div
-              style={{
-                background: "#f9fafb",
-                borderRadius: 12,
-                padding: "12px",
-                marginBottom: 12,
-                border: "1px solid #e5e7eb",
-              }}
-            >
-              <p
-                style={{
-                  fontSize: 11,
-                  color: "#6b7280",
-                  marginBottom: 8,
-                  fontWeight: 700,
-                }}
-              >
-                핵심 지표
-              </p>
-              {Object.entries(STAT_LABELS).map(([key, meta]) => (
-                <div
-                  key={key}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    marginBottom: 5,
-                  }}
-                >
-                  <span style={{ fontSize: 11, width: 60, color: "#6b7280" }}>
-                    {meta.emoji} {meta.label}
-                  </span>
-                  <div
-                    style={{
-                      flex: 1,
-                      height: 10,
-                      background: "#e5e7eb",
-                      borderRadius: 5,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${stats[key]}%`,
-                        height: "100%",
-                        background: meta.color,
-                        borderRadius: 5,
-                      }}
-                    />
-                  </div>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: "#6b7280",
-                      width: 28,
-                      textAlign: "right",
-                      fontWeight: 700,
-                    }}
-                  >
-                    {stats[key]}
-                  </span>
+            {/* 등급 그리드 */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+              {[
+                { label: "등급", value: `${grade.emoji} ${grade.grade}`, color: grade.color },
+                { label: "투자의견", value: grade.opinion, color: grade.opinionColor },
+                { label: "신용등급", value: creditGrade, color: "#111827" },
+              ].map((item, i) => (
+                <div key={i} style={{ flex: 1, background: "#f9fafb", borderRadius: 10, padding: "10px", border: "1px solid #e5e7eb" }}>
+                  <p style={{ fontSize: 10, color: "#9ca3af" }}>{item.label}</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: item.color }}>{item.value}</p>
                 </div>
               ))}
             </div>
-
-            {/* Analyst + Risk */}
-            <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.8 }}>
-              <p>
-                💡{" "}
-                <span style={{ fontWeight: 700, color: "#111827" }}>
-                  &quot;{grade.analystComment}&quot;
-                </span>
-              </p>
-              <p style={{ marginTop: 4 }}>
-                ⚠️ 리스크: {risks.join(", ")}
-              </p>
-              <p>
-                🏷️ 섹터: {sector} | 테마: {theme}
-              </p>
+            {/* 핵심 지표 */}
+            <div style={{ background: "#f9fafb", borderRadius: 14, padding: "12px 14px", marginBottom: 10, border: "1px solid #e5e7eb" }}>
+              <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 6, fontWeight: 700 }}>📈 핵심 지표</p>
+              {Object.entries(STAT_LABELS).map(([key, meta]) => (
+                <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                  <span style={{ fontSize: 11, width: 58, color: "#6b7280" }}>{meta.emoji} {meta.label}</span>
+                  <div style={{ flex: 1, height: 10, background: "#e5e7eb", borderRadius: 5, overflow: "hidden" }}>
+                    <div style={{ width: `${stats[key]}%`, height: "100%", background: meta.color, borderRadius: 5 }} />
+                  </div>
+                  <span style={{ fontSize: 11, color: "#6b7280", width: 28, textAlign: "right", fontWeight: 700 }}>{stats[key]}</span>
+                </div>
+              ))}
             </div>
-
-            <p
-              style={{
-                fontSize: 10,
-                color: "#d1d5db",
-                textAlign: "center",
-                marginTop: "auto",
-                paddingTop: 8,
-              }}
-            >
-              pickmetype.vercel.app
-            </p>
+            {/* 코멘트 + 리스크 */}
+            <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.7, marginBottom: 8 }}>
+              <p>💡 <span style={{ fontWeight: 700, color: "#111827" }}>&quot;{grade.analystComment}&quot;</span></p>
+              <p>⚠️ 리스크: {risks.join(", ")}</p>
+              <p>🏷️ {sector} | {theme}</p>
+            </div>
+            {/* 하단 CTA */}
+            <div style={{ marginTop: "auto", textAlign: "center" }}>
+              <div style={{ background: "#10b981", color: "#fff", borderRadius: 10, padding: "8px 0", fontSize: 13, fontWeight: 700 }}>
+                나도 측정하기 → pickmetype.vercel.app
+              </div>
+            </div>
           </div>
         </div>
 

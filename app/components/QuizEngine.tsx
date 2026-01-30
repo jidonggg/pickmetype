@@ -418,7 +418,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
 
     return (
       <div className={`min-h-[100dvh] bg-gradient-to-b ${r.bgClass} relative`}>
-        {/* Hidden share card for Instagram */}
+        {/* Hidden share card */}
         <div
           ref={shareCardRef}
           aria-hidden="true"
@@ -428,45 +428,57 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
             style={{
               width: 540,
               height: 720,
-              background: `linear-gradient(160deg, ${r.bgStart} 0%, ${r.bgEnd} 100%)`,
+              background: `linear-gradient(160deg, ${r.bgStart} 0%, #fff 50%, ${r.bgEnd} 100%)`,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
-              padding: "40px 36px",
+              padding: "0 36px",
               position: "relative",
               fontFamily: "'Noto Sans KR', sans-serif",
             }}
           >
-            <div style={{ position: "absolute", top: 24, right: 28, opacity: 0.12, fontSize: 36 }}>
-              {config.emoji}
+            {/* 브랜딩 헤더 */}
+            <div style={{ width: "100%", textAlign: "center", paddingTop: 28, marginBottom: 8 }}>
+              <p style={{ fontSize: 16, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif", color: "#333" }}>
+                pick<span style={{ color: r.color }}>me</span>type
+              </p>
             </div>
-            <div style={{ position: "absolute", bottom: 24, left: 28, opacity: 0.12, fontSize: 36 }}>
-              {config.emoji}
-            </div>
-            <p style={{ fontSize: 15, color: "#999", marginBottom: 20, letterSpacing: 3, fontWeight: 500 }}>
+            {/* 구분선 */}
+            <div style={{ width: 60, height: 2, background: r.color, opacity: 0.3, borderRadius: 1, marginBottom: 24 }} />
+            {/* 메인 콘텐츠 */}
+            <p style={{ fontSize: 13, color: "#999", letterSpacing: 4, fontWeight: 500, marginBottom: 16 }}>
               나의 유형은
             </p>
-            <div style={{ fontSize: 100, marginBottom: 16, lineHeight: 1 }}>{r.emoji}</div>
-            <h2 style={{ fontSize: 34, fontWeight: 900, color: r.color, marginBottom: 8, fontFamily: "'Black Han Sans', sans-serif" }}>
+            <div style={{ fontSize: 88, marginBottom: 12, lineHeight: 1 }}>{r.emoji}</div>
+            <h2 style={{ fontSize: 32, fontWeight: 900, color: r.color, marginBottom: 6, fontFamily: "'Black Han Sans', sans-serif" }}>
               {r.name}
             </h2>
-            <p style={{ fontSize: 18, fontWeight: 700, color: r.color, marginBottom: 28, textAlign: "center" }}>
+            <p style={{ fontSize: 16, fontWeight: 700, color: r.color, marginBottom: 24, textAlign: "center" }}>
               {r.title}
             </p>
-            <p style={{ fontSize: 15, lineHeight: 1.7, color: "#666", textAlign: "center", marginBottom: 28 }}>
-              {r.shortDesc}
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
+            {/* 설명 카드 */}
+            <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: 16, padding: "16px 20px", marginBottom: 20, width: "100%", textAlign: "center" }}>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#555" }}>
+                {r.shortDesc}
+              </p>
+            </div>
+            {/* 태그 */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 20 }}>
               {r.tags.map((tag, i) => (
-                <span key={i} style={{ background: r.color, color: "#fff", padding: "6px 16px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}>
+                <span key={i} style={{ background: r.color, color: "#fff", padding: "6px 16px", borderRadius: 999, fontSize: 12, fontWeight: 600 }}>
                   {tag}
                 </span>
               ))}
             </div>
-            <p style={{ fontSize: 12, color: "#bbb", position: "absolute", bottom: 28 }}>
-              pickmetype.vercel.app
-            </p>
+            {/* 하단 CTA */}
+            <div style={{ position: "absolute", bottom: 24, width: "calc(100% - 72px)", textAlign: "center" }}>
+              <div style={{ background: r.color, color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
+                나도 테스트하기 → pickmetype.vercel.app
+              </div>
+              <p style={{ fontSize: 11, color: "#bbb" }}>
+                {config.mainTitle} {config.highlight}?
+              </p>
+            </div>
           </div>
         </div>
 
