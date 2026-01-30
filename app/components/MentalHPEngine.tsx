@@ -285,41 +285,44 @@ export default function MentalHPEngine() {
   const shareToInstagram = async () => {
     if (!shareCardRef.current) return;
     gtagEvent("share", { method: "instagram", quiz_id: "mental-hp" });
+    const el = shareCardRef.current;
+    const orig = el.style.cssText;
     try {
       await document.fonts.ready;
+      el.style.cssText = "position:fixed;left:0;top:0;width:540px;height:720px;z-index:-9999;pointer-events:none;";
       const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(shareCardRef.current, {
+      const canvas = await html2canvas(el, {
         scale: 2,
         useCORS: true,
-        backgroundColor: null,
+        backgroundColor: "#0f0f23",
+        width: 540,
+        height: 720,
       });
-      canvas.toBlob(
-        async (blob) => {
-          if (!blob) return;
-          const file = new File([blob], "mental-hp-result.png", {
-            type: "image/png",
-          });
-          if (navigator.share && navigator.canShare?.({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: "나의 멘탈 HP 측정기",
-              text: getShareText(),
-            });
-          } else {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "mental-hp-result.png";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            toast("이미지 저장 완료! 인스타에 공유해보세요 📸");
-          }
-        },
-        "image/png"
+      el.style.cssText = orig;
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png")
       );
+      if (!blob) return;
+      const file = new File([blob], "mental-hp-result.png", { type: "image/png" });
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "나의 멘탈 HP 측정기",
+          text: getShareText(),
+        });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "mental-hp-result.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast("이미지 저장 완료! 인스타에 공유해보세요 📸");
+      }
     } catch {
+      el.style.cssText = orig;
       toast("이미지 생성에 실패했어요 😢");
     }
   };

@@ -243,41 +243,45 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
   const shareToInstagram = async () => {
     if (!shareCardRef.current) return;
     gtagEvent("share", { method: "instagram", quiz_id: config.id, result_type: result || "" });
+    const el = shareCardRef.current;
+    const orig = el.style.cssText;
     try {
       await document.fonts.ready;
+      // 캡처를 위해 화면 안으로 이동 (보이지 않게)
+      el.style.cssText = "position:fixed;left:0;top:0;width:540px;height:720px;z-index:-9999;pointer-events:none;";
       const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(shareCardRef.current, {
+      const canvas = await html2canvas(el, {
         scale: 2,
         useCORS: true,
-        backgroundColor: null,
+        backgroundColor: "#ffffff",
+        width: 540,
+        height: 720,
       });
-      canvas.toBlob(
-        async (blob) => {
-          if (!blob) return;
-          const file = new File([blob], "my-result.png", {
-            type: "image/png",
-          });
-          if (navigator.share && navigator.canShare?.({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: config.mainTitle + " " + config.highlight,
-              text: getShareText(),
-            });
-          } else {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "my-result.png";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            toast("이미지 저장 완료! 인스타에 공유해보세요 📸");
-          }
-        },
-        "image/png"
+      el.style.cssText = orig;
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png")
       );
+      if (!blob) return;
+      const file = new File([blob], "my-result.png", { type: "image/png" });
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: config.mainTitle + " " + config.highlight,
+          text: getShareText(),
+        });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "my-result.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast("이미지 저장 완료! 인스타에 공유해보세요 📸");
+      }
     } catch {
+      el.style.cssText = orig;
       toast("이미지 생성에 실패했어요 😢");
     }
   };
