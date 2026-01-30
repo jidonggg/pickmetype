@@ -44,6 +44,20 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-PK95F0LSPM"
+          strategy="beforeInteractive"
+        />
+        <Script id="gtag-init" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-PK95F0LSPM', { send_page_view: true });
+          `}
+        </Script>
+      </head>
       <body
         className={`${displayFont.variable} ${bodyFont.variable} antialiased flex flex-col min-h-[100dvh]`}
         style={{ fontFamily: "var(--font-body)" }}
@@ -58,19 +72,6 @@ export default function RootLayout({
           src="https://developers.kakao.com/sdk/js/kakao.min.js"
           strategy="afterInteractive"
         />
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-PK95F0LSPM"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-PK95F0LSPM', { send_page_view: true });
-          `}
-        </Script>
         <GoogleAnalyticsPageView />
         <Header />
         <main className="flex-1">{children}</main>
