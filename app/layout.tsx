@@ -45,18 +45,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-PK95F0LSPM"
-          strategy="beforeInteractive"
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PK95F0LSPM" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PK95F0LSPM');`,
+          }}
         />
-        <Script id="gtag-init" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-PK95F0LSPM', { send_page_view: true });
-          `}
-        </Script>
       </head>
       <body
         className={`${displayFont.variable} ${bodyFont.variable} antialiased flex flex-col min-h-[100dvh]`}
