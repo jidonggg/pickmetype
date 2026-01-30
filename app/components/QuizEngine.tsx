@@ -261,15 +261,20 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
         canvas.toBlob(resolve, "image/png")
       );
       if (!blob) return;
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "my-result.png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast("이미지 저장 완료! 인스타 스토리에 올려보세요 📸");
+      const file = new File([blob], "my-result.png", { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "my-result.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast("이미지 저장 완료! 인스타 스토리에 올려보세요 📸");
+      }
     } catch {
       el.style.cssText = orig;
       toast("이미지 생성에 실패했어요 😢");
