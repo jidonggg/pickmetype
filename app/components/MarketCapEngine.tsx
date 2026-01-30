@@ -192,12 +192,11 @@ export default function MarketCapEngine() {
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
         window.Kakao.Share.sendDefault({
-          objectType: "feed",
-          content: {
-            title: `📊 ${displayName} 분석 리포트`,
-            description: `💰 시가총액: ${result.marketCap.display}\n${result.grade.emoji} ${result.grade.grade}`,
-            imageUrl: "https://pickmetype.vercel.app/og-image.png",
-            link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+          objectType: "text",
+          text: `📊 ${displayName} 분석 리포트\n💰 시가총액: ${result.marketCap.display}\n${result.grade.emoji} ${result.grade.grade}`,
+          link: {
+            mobileWebUrl: "https://pickmetype.vercel.app",
+            webUrl: "https://pickmetype.vercel.app",
           },
           buttonTitle: "나도 측정하기",
         });

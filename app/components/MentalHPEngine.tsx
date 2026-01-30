@@ -233,12 +233,11 @@ export default function MentalHPEngine() {
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
         window.Kakao.Share.sendDefault({
-          objectType: "feed",
-          content: {
-            title: `⚔️ ${displayName}의 멘탈 HP: ${finalStats.stats.hp}/100`,
-            description: `${grade.emoji} ${grade.grade}등급 - ${grade.title}\n📍 예상 생존: ${finalStats.survivalDays}일`,
-            imageUrl: "https://pickmetype.vercel.app/og-image.png",
-            link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+          objectType: "text",
+          text: `⚔️ ${displayName}의 멘탈 HP: ${finalStats.stats.hp}/100\n${grade.emoji} ${grade.grade}등급 - ${grade.title}\n📍 예상 생존: ${finalStats.survivalDays}일`,
+          link: {
+            mobileWebUrl: "https://pickmetype.vercel.app",
+            webUrl: "https://pickmetype.vercel.app",
           },
           buttonTitle: "나도 측정하기",
         });

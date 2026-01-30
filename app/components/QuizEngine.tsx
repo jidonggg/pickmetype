@@ -189,15 +189,11 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
         window.Kakao.Share.sendDefault({
-          objectType: "feed",
-          content: {
-            title: `${r.emoji} 나의 유형: ${r.name}`,
-            description: `${r.title}\n${r.shortDesc}`,
-            imageUrl: "https://pickmetype.vercel.app/og-image.png",
-            link: {
-              mobileWebUrl: shareUrl,
-              webUrl: shareUrl,
-            },
+          objectType: "text",
+          text: `${r.emoji} 나의 유형: ${r.name}\n\n${r.title}\n${r.shortDesc}`,
+          link: {
+            mobileWebUrl: "https://pickmetype.vercel.app",
+            webUrl: "https://pickmetype.vercel.app",
           },
           buttonTitle: "나도 테스트하기",
         });
