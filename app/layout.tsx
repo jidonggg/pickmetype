@@ -3,6 +3,7 @@ import { Black_Han_Sans, Noto_Sans_KR } from "next/font/google";
 import Script from "next/script";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 import "./globals.css";
 
 const displayFont = Black_Han_Sans({
@@ -57,6 +58,7 @@ export default function RootLayout({
           src="https://developers.kakao.com/sdk/js/kakao.min.js"
           strategy="afterInteractive"
         />
+        <GoogleAnalytics />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

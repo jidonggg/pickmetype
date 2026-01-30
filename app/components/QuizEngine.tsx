@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import AdBanner from "./AdBanner";
+import { gtagEvent } from "./GoogleAnalytics";
 
 /* ==================== Types ==================== */
 export interface Answer {
@@ -126,6 +127,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
     setCurrentQ(0);
     setScores(makeScores());
     window.scrollTo({ top: 0 });
+    gtagEvent("quiz_start", { quiz_id: config.id });
   };
 
   const handleAnswer = (type: string) => {
@@ -152,6 +154,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
         setPhase("result");
         setIsAnimating(false);
         window.scrollTo({ top: 0 });
+        gtagEvent("quiz_complete", { quiz_id: config.id, result_type: winner });
       }
     }, 350);
   };
@@ -176,6 +179,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
 
   const shareToKakao = () => {
     if (!result) return;
+    gtagEvent("share", { method: "kakao", quiz_id: config.id, result_type: result });
     const r = results[result];
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
@@ -197,6 +201,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
   };
 
   const shareToX = () => {
+    gtagEvent("share", { method: "x", quiz_id: config.id, result_type: result || "" });
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       getShareText()
     )}&url=${encodeURIComponent(shareUrl)}`;
@@ -204,6 +209,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
   };
 
   const copyLink = async () => {
+    gtagEvent("share", { method: "copy_link", quiz_id: config.id, result_type: result || "" });
     try {
       await navigator.clipboard.writeText(shareUrl);
       toast("링크가 복사되었어요! 📋");
@@ -230,6 +236,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
 
   const shareToInstagram = async () => {
     if (!shareCardRef.current) return;
+    gtagEvent("share", { method: "instagram", quiz_id: config.id, result_type: result || "" });
     try {
       await document.fonts.ready;
       const html2canvas = (await import("html2canvas")).default;

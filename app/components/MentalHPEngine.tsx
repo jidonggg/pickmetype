@@ -3,7 +3,17 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import AdBanner from "./AdBanner";
-import { questions, BASE_STATS, STAT_META } from "../mental-hp/data";
+import { gtagEvent } from "./GoogleAnalytics";
+import {
+  questions,
+  BASE_STATS,
+  STAT_META,
+  JOB_POOL,
+  BUFF_POOL,
+  DEBUFF_POOL,
+  RECOVERY_POOL,
+  getGradeInfo,
+} from "../mental-hp/data";
 
 declare global {
   interface Window {
@@ -21,64 +31,33 @@ const KAKAO_KEY = "79b4c0e71a9520496fb0df7ac77c8804";
 
 type Phase = "intro" | "quiz" | "calculating" | "result";
 
-function clamp(v: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, v));
+function clamp(v: number) {
+  return Math.max(0, Math.min(100, v));
+}
+
+function seededRandom(seed: number) {
+  const x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+}
+
+function pickFromPool(pool: string[], seed: number, exclude: string[] = []) {
+  const filtered = pool.filter((item) => !exclude.includes(item));
+  if (filtered.length === 0) return pool[0];
+  return filtered[Math.floor(seededRandom(seed) * filtered.length)];
 }
 
 function getHPColor(hp: number) {
-  if (hp >= 80) return "#4ade80";
-  if (hp >= 60) return "#facc15";
-  if (hp >= 40) return "#fb923c";
-  if (hp >= 20) return "#f87171";
+  if (hp >= 70) return "#4ade80";
+  if (hp >= 50) return "#facc15";
+  if (hp >= 30) return "#fb923c";
+  if (hp >= 10) return "#f87171";
   return "#a1a1aa";
-}
-
-function getGrade(hp: number) {
-  if (hp >= 80)
-    return {
-      grade: "S",
-      emoji: "💚",
-      color: "#4ade80",
-      status: "풀피 상태! 무적입니다",
-      desc: "당신의 멘탈은 전설급 장비를 풀셋 맞춘 상태!\n어떤 보스가 와도 거뜬합니다.",
-    };
-  if (hp >= 60)
-    return {
-      grade: "A",
-      emoji: "💛",
-      color: "#facc15",
-      status: "양호! 아직 버틸만해요",
-      desc: "적당한 장비에 포션도 충분!\n던전 한두 개는 더 돌 수 있어요.",
-    };
-  if (hp >= 40)
-    return {
-      grade: "B",
-      emoji: "🧡",
-      color: "#fb923c",
-      status: "주의! 충전이 필요해요",
-      desc: "포션이 바닥나기 시작했어요.\n마을에 가서 휴식을 취하세요.",
-    };
-  if (hp >= 20)
-    return {
-      grade: "C",
-      emoji: "❤️",
-      color: "#f87171",
-      status: "위험! 곧 쓰러질 수 있어요",
-      desc: "HP가 깜빡이고 있어요!\n당장 세이브 포인트로 돌아가세요.",
-    };
-  return {
-    grade: "D",
-    emoji: "🖤",
-    color: "#a1a1aa",
-    status: "빈사 상태! 긴급 휴식 필요",
-    desc: "화면이 흑백으로 변하고 있어요...\n리스폰 지점에서 다시 시작합시다.",
-  };
 }
 
 function getTitle(stats: Record<string, number>) {
   const { hp, fatigue, grit, emotion, reason } = stats;
   if (hp >= 90 && fatigue <= 30) return "인생 이지모드인";
-  if (hp >= 80 && grit >= 70) return "멘탈 강철의";
+  if (hp >= 80 && grit >= 70) return "멘탈 풀셋 장착한";
   if (hp >= 80) return "풀피의 여유를 가진";
   if (hp >= 70 && emotion >= 70) return "감성 충만한";
   if (hp >= 60 && reason >= 70) return "냉철한 판단력의";
@@ -88,8 +67,22 @@ function getTitle(stats: Record<string, number>) {
   if (hp >= 40) return "하루하루 간신히 버티는";
   if (hp >= 30 && emotion >= 70) return "감정에 휘둘리는";
   if (hp >= 20) return "곧 쓰러질 것 같은";
+  if (hp >= 10) return "바닥을 기는";
   if (fatigue >= 80) return "완전 방전된";
   return "리스폰 대기 중인";
+}
+
+function getSurvivalDays(hp: number, seed: number) {
+  if (hp >= 90) return Math.floor(365 + seededRandom(seed + 50) * 365);
+  if (hp >= 80) return Math.floor(180 + seededRandom(seed + 50) * 185);
+  if (hp >= 70) return Math.floor(90 + seededRandom(seed + 50) * 90);
+  if (hp >= 60) return Math.floor(60 + seededRandom(seed + 50) * 30);
+  if (hp >= 50) return Math.floor(30 + seededRandom(seed + 50) * 30);
+  if (hp >= 40) return Math.floor(14 + seededRandom(seed + 50) * 16);
+  if (hp >= 30) return Math.floor(7 + seededRandom(seed + 50) * 7);
+  if (hp >= 20) return Math.floor(3 + seededRandom(seed + 50) * 4);
+  if (hp >= 10) return Math.floor(1 + seededRandom(seed + 50) * 2);
+  return 0;
 }
 
 export default function MentalHPEngine() {
@@ -120,10 +113,12 @@ export default function MentalHPEngine() {
   const displayAge = age ? parseInt(age) : null;
 
   /* ---------- calculate results ---------- */
+  const seed = answers.reduce((sum, a, i) => sum + a * (i + 1), 0);
+
   const finalStats = (() => {
     const stats = { ...BASE_STATS };
-    const buffs: string[] = [];
-    const debuffs: string[] = [];
+    const earnedBuffs: string[] = [];
+    const earnedDebuffs: string[] = [];
 
     answers.forEach((ansIdx, qIdx) => {
       if (qIdx >= questions.length) return;
@@ -132,36 +127,52 @@ export default function MentalHPEngine() {
       Object.entries(answer.stats).forEach(([key, val]) => {
         stats[key] = (stats[key] || 0) + (val || 0);
       });
-      if (answer.buff && !buffs.includes(answer.buff)) buffs.push(answer.buff);
-      if (answer.debuff && !debuffs.includes(answer.debuff))
-        debuffs.push(answer.debuff);
+      if (answer.buff && !earnedBuffs.includes(answer.buff))
+        earnedBuffs.push(answer.buff);
+      if (answer.debuff && !earnedDebuffs.includes(answer.debuff))
+        earnedDebuffs.push(answer.debuff);
     });
 
     Object.keys(stats).forEach((key) => {
-      stats[key] = clamp(stats[key], 0, 100);
+      stats[key] = clamp(stats[key]);
     });
 
-    if (stats.grit >= 70) buffs.push("강철 멘탈");
-    if (stats.hp >= 80) buffs.push("무적 오라");
-    if (stats.reason >= 70) buffs.push("냉철한 두뇌");
-    if (stats.emotion >= 75 && stats.hp >= 50) buffs.push("공감 능력 MAX");
-    if (stats.fatigue >= 60 && stats.fatigue < 70) buffs.push("커피 의존증");
+    // Random pool picks
+    const randomBuff1 = pickFromPool(BUFF_POOL, seed + 10, earnedBuffs);
+    const randomBuff2 = pickFromPool(
+      BUFF_POOL,
+      seed + 20,
+      earnedBuffs.concat(randomBuff1)
+    );
+    const randomDebuff1 = pickFromPool(DEBUFF_POOL, seed + 30, earnedDebuffs);
+    const randomDebuff2 = pickFromPool(
+      DEBUFF_POOL,
+      seed + 40,
+      earnedDebuffs.concat(randomDebuff1)
+    );
 
-    if (stats.fatigue >= 70) debuffs.push("만성피로");
-    if (stats.reason <= 30) debuffs.push("결정장애");
-    if (stats.money <= 25) debuffs.push("금전 고갈");
-    if (stats.hp <= 25) debuffs.push("번아웃");
-    if (stats.emotion >= 85 && stats.hp <= 40) debuffs.push("감정 과부하");
+    // More buffs if high HP, more debuffs if low HP
+    const buffs = [...earnedBuffs, randomBuff1];
+    const debuffs = [...earnedDebuffs, randomDebuff1];
+    if (stats.hp >= 70) buffs.push(randomBuff2);
+    if (stats.hp < 50) debuffs.push(randomDebuff2);
+
+    const job = pickFromPool(JOB_POOL, seed + 60);
+    const recovery = pickFromPool(RECOVERY_POOL, seed + 70);
+    const survivalDays = getSurvivalDays(stats.hp, seed);
 
     return {
       stats,
       buffs: Array.from(new Set(buffs)),
       debuffs: Array.from(new Set(debuffs)),
+      job,
+      recovery,
+      survivalDays,
     };
   })();
 
-  const grade = getGrade(finalStats.stats.hp);
-  const title = getTitle(finalStats.stats);
+  const grade = getGradeInfo(finalStats.stats.hp);
+  const titleText = getTitle(finalStats.stats);
 
   /* ---------- handlers ---------- */
   const handleStart = () => {
@@ -170,12 +181,12 @@ export default function MentalHPEngine() {
     setAnswers([]);
     setShowBars(false);
     window.scrollTo({ top: 0 });
+    gtagEvent("quiz_start", { quiz_id: "mental-hp" });
   };
 
   const handleAnswer = (ansIdx: number) => {
     if (isAnimating) return;
     setIsAnimating(true);
-
     const newAnswers = [...answers, ansIdx];
     setAnswers(newAnswers);
 
@@ -189,6 +200,7 @@ export default function MentalHPEngine() {
         window.scrollTo({ top: 0 });
         setTimeout(() => {
           setPhase("result");
+          gtagEvent("quiz_complete", { quiz_id: "mental-hp" });
           window.scrollTo({ top: 0 });
           setTimeout(() => setShowBars(true), 200);
         }, 2000);
@@ -209,14 +221,15 @@ export default function MentalHPEngine() {
     typeof window !== "undefined" ? window.location.href.split("?")[0] : "";
 
   const getShareText = () =>
-    `⚔️ 나의 멘탈 HP: ${finalStats.stats.hp}/100 (${grade.grade}등급)\n${grade.emoji} ${grade.status}\n🏷️ "${title}" ${displayName}\n\n너도 측정해봐!`;
+    `⚔️ ${displayName}의 멘탈 HP: ${finalStats.stats.hp}/100\n${grade.emoji} ${grade.grade}등급 "${grade.title}"\n🏷️ 칭호: 『${titleText}』\n📍 예상 생존: ${finalStats.survivalDays}일\n\n너도 측정해봐!`;
 
   const shareToKakao = () => {
+    gtagEvent("share", { method: "kakao", quiz_id: "mental-hp" });
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
         window.Kakao.Share.sendDefault({
           objectType: "text",
-          text: `⚔️ ${displayName}의 멘탈 HP: ${finalStats.stats.hp}/100\n${grade.emoji} ${grade.status}\n🏷️ 칭호: "${title}"\n\n너도 측정해봐!`,
+          text: `⚔️ ${displayName}의 멘탈 HP: ${finalStats.stats.hp}/100\n${grade.emoji} ${grade.grade}등급 - ${grade.title}\n📍 예상 생존: ${finalStats.survivalDays}일\n\n내 멘탈 HP ${finalStats.stats.hp}%야ㅋㅋ 너는?`,
           link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
           buttonTitle: "나도 측정하기",
         });
@@ -229,11 +242,13 @@ export default function MentalHPEngine() {
   };
 
   const shareToX = () => {
+    gtagEvent("share", { method: "x", quiz_id: "mental-hp" });
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText())}&url=${encodeURIComponent(shareUrl)}`;
     window.open(url, "_blank", "width=600,height=400");
   };
 
   const copyLink = async () => {
+    gtagEvent("share", { method: "copy_link", quiz_id: "mental-hp" });
     try {
       await navigator.clipboard.writeText(shareUrl);
       toast("링크가 복사되었어요! 📋");
@@ -260,6 +275,7 @@ export default function MentalHPEngine() {
 
   const shareToInstagram = async () => {
     if (!shareCardRef.current) return;
+    gtagEvent("share", { method: "instagram", quiz_id: "mental-hp" });
     try {
       await document.fonts.ready;
       const html2canvas = (await import("html2canvas")).default;
@@ -305,7 +321,6 @@ export default function MentalHPEngine() {
       <div className="min-h-[100dvh] flex flex-col items-center justify-center px-4 bg-[#0f0f23]">
         <div className="w-full max-w-md mx-auto flex flex-col items-center">
           <AdBanner />
-
           <div className="w-full mt-2 mb-6 text-center animate-fade-in">
             <div className="text-7xl mb-5 animate-bounce-slow">⚔️</div>
             <h1
@@ -462,11 +477,11 @@ export default function MentalHPEngine() {
 
   /* ==================== RESULT ==================== */
   if (phase === "result") {
-    const { stats, buffs, debuffs } = finalStats;
+    const { stats, buffs, debuffs, job, recovery, survivalDays } = finalStats;
 
     return (
       <div className="min-h-[100dvh] bg-[#0f0f23] relative">
-        {/* Hidden share card for Instagram */}
+        {/* Hidden share card */}
         <div
           ref={shareCardRef}
           aria-hidden="true"
@@ -486,16 +501,16 @@ export default function MentalHPEngine() {
                 "linear-gradient(160deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)",
               display: "flex",
               flexDirection: "column",
-              padding: "32px",
+              padding: "28px",
               fontFamily: "'Noto Sans KR', sans-serif",
               color: "#fff",
               position: "relative",
             }}
           >
-            <div style={{ textAlign: "center", marginBottom: 16 }}>
+            <div style={{ textAlign: "center", marginBottom: 12 }}>
               <p
                 style={{
-                  fontSize: 13,
+                  fontSize: 12,
                   color: "#666",
                   letterSpacing: 3,
                   marginBottom: 4,
@@ -505,7 +520,7 @@ export default function MentalHPEngine() {
               </p>
               <p
                 style={{
-                  fontSize: 36,
+                  fontSize: 32,
                   fontWeight: 900,
                   color: grade.color,
                   fontFamily: "'Black Han Sans', sans-serif",
@@ -513,12 +528,14 @@ export default function MentalHPEngine() {
               >
                 {grade.grade}등급 {grade.emoji}
               </p>
+              <p style={{ fontSize: 14, color: "#aaa" }}>{grade.title}</p>
             </div>
+
             <div
               style={{
                 background: "rgba(255,255,255,0.05)",
-                borderRadius: 16,
-                padding: "20px",
+                borderRadius: 14,
+                padding: "16px",
                 border: "1px solid rgba(255,255,255,0.1)",
                 flex: 1,
                 display: "flex",
@@ -528,84 +545,81 @@ export default function MentalHPEngine() {
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
                   justifyContent: "space-between",
-                  marginBottom: 14,
+                  alignItems: "center",
+                  marginBottom: 10,
                 }}
               >
                 <div>
                   <p
                     style={{
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: 900,
                       fontFamily: "'Black Han Sans', sans-serif",
                     }}
                   >
-                    {displayName}의 멘탈 상태
+                    ⚔️ {displayName}의 상태창
                   </p>
-                  {displayAge && (
-                    <p style={{ fontSize: 14, color: "#888" }}>
-                      LV. {displayAge}
-                    </p>
-                  )}
+                  <p style={{ fontSize: 12, color: "#888" }}>
+                    {displayAge ? `LV.${displayAge}` : "LV.??"} | 직업: {job}
+                  </p>
                 </div>
               </div>
 
-              {/* HP/MP bars */}
               {[
                 {
-                  label: "HP",
-                  val: stats.hp,
-                  color: getHPColor(stats.hp),
+                  l: "HP",
+                  v: stats.hp,
+                  c: getHPColor(stats.hp),
                 },
-                { label: "MP", val: stats.mp, color: "#60a5fa" },
+                { l: "MP", v: stats.mp, c: "#60a5fa" },
               ].map((bar) => (
                 <div
-                  key={bar.label}
+                  key={bar.l}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 8,
-                    marginBottom: 6,
+                    gap: 6,
+                    marginBottom: 4,
                   }}
                 >
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: 700,
-                      width: 28,
-                      color: bar.color,
+                      width: 24,
+                      color: bar.c,
                     }}
                   >
-                    {bar.label}
+                    {bar.l}
                   </span>
                   <div
                     style={{
                       flex: 1,
-                      height: 14,
+                      height: 12,
                       background: "rgba(255,255,255,0.05)",
-                      borderRadius: 7,
+                      borderRadius: 6,
                       overflow: "hidden",
                     }}
                   >
                     <div
                       style={{
-                        width: `${bar.val}%`,
+                        width: `${bar.v}%`,
                         height: "100%",
-                        background: bar.color,
-                        borderRadius: 7,
+                        background: bar.c,
+                        borderRadius: 6,
                       }}
                     />
                   </div>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 11,
                       color: "#aaa",
-                      width: 50,
+                      width: 44,
                       textAlign: "right",
                     }}
                   >
-                    {bar.val}/100
+                    {bar.v}/100
                   </span>
                 </div>
               ))}
@@ -614,30 +628,29 @@ export default function MentalHPEngine() {
                 style={{
                   height: 1,
                   background: "rgba(255,255,255,0.1)",
-                  margin: "10px 0",
+                  margin: "8px 0",
                 }}
               />
 
-              {/* Stat bars */}
               {Object.entries(STAT_META).map(([key, meta]) => (
                 <div
                   key={key}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 8,
-                    marginBottom: 5,
+                    gap: 6,
+                    marginBottom: 3,
                   }}
                 >
-                  <span style={{ fontSize: 12, width: 70, color: "#aaa" }}>
+                  <span style={{ fontSize: 11, width: 64, color: "#aaa" }}>
                     {meta.emoji} {meta.label}
                   </span>
                   <div
                     style={{
                       flex: 1,
-                      height: 10,
+                      height: 8,
                       background: "rgba(255,255,255,0.05)",
-                      borderRadius: 5,
+                      borderRadius: 4,
                       overflow: "hidden",
                     }}
                   >
@@ -646,15 +659,15 @@ export default function MentalHPEngine() {
                         width: `${stats[key]}%`,
                         height: "100%",
                         background: meta.color,
-                        borderRadius: 5,
+                        borderRadius: 4,
                       }}
                     />
                   </div>
                   <span
                     style={{
-                      fontSize: 12,
+                      fontSize: 11,
                       color: "#888",
-                      width: 30,
+                      width: 26,
                       textAlign: "right",
                     }}
                   >
@@ -667,39 +680,44 @@ export default function MentalHPEngine() {
                 style={{
                   height: 1,
                   background: "rgba(255,255,255,0.1)",
-                  margin: "10px 0",
+                  margin: "8px 0",
                 }}
               />
 
-              <div
-                style={{ fontSize: 13, color: "#aaa", lineHeight: 1.8 }}
-              >
+              <div style={{ fontSize: 12, color: "#aaa", lineHeight: 1.9 }}>
                 <p>
                   🏷️ 칭호:{" "}
                   <span style={{ color: grade.color, fontWeight: 700 }}>
-                    &quot;{title}&quot;
+                    『{titleText}』
                   </span>
                 </p>
                 <p>
-                  ⚔️ 버프:{" "}
-                  <span style={{ color: "#4ade80" }}>
-                    {buffs.length > 0 ? buffs.join(", ") : "없음"}
-                  </span>
+                  ✨ 버프:{" "}
+                  <span style={{ color: "#4ade80" }}>{buffs.join(", ")}</span>
                 </p>
                 <p>
                   💀 디버프:{" "}
-                  <span style={{ color: "#f87171" }}>
-                    {debuffs.length > 0 ? debuffs.join(", ") : "없음"}
+                  <span style={{ color: "#f87171" }}>{debuffs.join(", ")}</span>
+                </p>
+                <p>
+                  📍 예상 생존:{" "}
+                  <span style={{ color: "#facc15" }}>
+                    {survivalDays > 0 ? `${survivalDays}일` : "Game Over"}
                   </span>
+                </p>
+                <p>
+                  💊 추천 회복템:{" "}
+                  <span style={{ color: "#60a5fa" }}>{recovery}</span>
                 </p>
               </div>
             </div>
+
             <p
               style={{
-                fontSize: 11,
+                fontSize: 10,
                 color: "#444",
                 textAlign: "center",
-                marginTop: 16,
+                marginTop: 12,
               }}
             >
               pickmetype.vercel.app
@@ -709,7 +727,7 @@ export default function MentalHPEngine() {
 
         {/* Visible result */}
         <div className="relative z-10 w-full max-w-md mx-auto px-4 py-6 flex flex-col items-center">
-          {/* Grade badge */}
+          {/* Grade */}
           <div className="w-full text-center animate-fade-in mb-4">
             <div
               className="inline-flex items-center gap-2 px-6 py-2 rounded-full border mb-3"
@@ -733,29 +751,22 @@ export default function MentalHPEngine() {
               className="text-xl font-bold text-white mb-1"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              {grade.status}
+              {grade.title}
             </p>
-            <p className="text-sm text-gray-400 whitespace-pre-line">
-              {grade.desc}
-            </p>
+            <p className="text-sm text-gray-400">{grade.statusDetail}</p>
           </div>
 
           {/* Stat window */}
           <div className="w-full bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-5 mb-4 animate-slide-up">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2
-                  className="text-lg font-bold text-white"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  {displayName}의 멘탈 상태
-                </h2>
-                {displayAge && (
-                  <p className="text-sm text-gray-500">LV. {displayAge}</p>
-                )}
-              </div>
+            <div className="flex items-center justify-between mb-1">
+              <h2
+                className="text-lg font-bold text-white"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                ⚔️ {displayName}의 상태창
+              </h2>
               <div
-                className="text-2xl font-black"
+                className="text-xl font-black"
                 style={{
                   fontFamily: "var(--font-display)",
                   color: grade.color,
@@ -764,6 +775,9 @@ export default function MentalHPEngine() {
                 {grade.grade}
               </div>
             </div>
+            <p className="text-sm text-gray-500 mb-4">
+              {displayAge ? `LV.${displayAge}` : "LV.??"} | 직업: {job}
+            </p>
 
             {/* HP */}
             <div className="mb-2">
@@ -808,9 +822,16 @@ export default function MentalHPEngine() {
               </div>
             </div>
 
-            <div className="h-px bg-white/10 mb-4" />
+            <div className="h-px bg-white/10 mb-3">
+              <span className="sr-only">구분선</span>
+            </div>
+            <p
+              className="text-sm text-gray-500 mb-2.5"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              📊 스탯
+            </p>
 
-            {/* Stats */}
             <div className="space-y-2.5">
               {Object.entries(STAT_META).map(([key, meta]) => (
                 <div key={key} className="flex items-center gap-2">
@@ -837,7 +858,7 @@ export default function MentalHPEngine() {
           {/* Title + Buffs/Debuffs */}
           <div
             className="w-full bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-5 mb-4 animate-slide-up"
-            style={{ animationDelay: "0.12s" }}
+            style={{ animationDelay: "0.1s" }}
           >
             <div className="space-y-3">
               <div>
@@ -849,47 +870,65 @@ export default function MentalHPEngine() {
                     color: grade.color,
                   }}
                 >
-                  &quot;{title}&quot; {displayName}
+                  『{titleText}』 {displayName}
                 </p>
               </div>
               <div className="h-px bg-white/10" />
               <div>
-                <span className="text-sm text-gray-500">⚔️ 장착 버프</span>
+                <span className="text-sm text-gray-500">✨ 버프</span>
                 <div className="flex flex-wrap gap-1.5 mt-1.5">
-                  {buffs.length > 0 ? (
-                    buffs.map((b, i) => (
-                      <span
-                        key={i}
-                        className="px-2.5 py-1 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-sm"
-                      >
-                        {b}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-gray-600">
-                      없음 (레어템 필요)
+                  {buffs.map((b, i) => (
+                    <span
+                      key={i}
+                      className="px-2.5 py-1 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-sm"
+                    >
+                      {b}
                     </span>
-                  )}
+                  ))}
                 </div>
               </div>
               <div>
                 <span className="text-sm text-gray-500">💀 디버프</span>
                 <div className="flex flex-wrap gap-1.5 mt-1.5">
-                  {debuffs.length > 0 ? (
-                    debuffs.map((d, i) => (
-                      <span
-                        key={i}
-                        className="px-2.5 py-1 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm"
-                      >
-                        {d}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-gray-600">
-                      없음 (축복받은 상태)
+                  {debuffs.map((d, i) => (
+                    <span
+                      key={i}
+                      className="px-2.5 py-1 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm"
+                    >
+                      {d}
                     </span>
-                  )}
+                  ))}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Survival + Recovery */}
+          <div
+            className="w-full bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-5 mb-4 animate-slide-up"
+            style={{ animationDelay: "0.15s" }}
+          >
+            <div className="grid grid-cols-2 gap-3">
+              <div className="text-center p-3 bg-white/5 rounded-xl">
+                <p className="text-sm text-gray-500 mb-1">📍 예상 생존</p>
+                <p
+                  className="text-2xl font-bold"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    color: grade.color,
+                  }}
+                >
+                  {survivalDays > 0 ? `${survivalDays}일` : "Game Over"}
+                </p>
+              </div>
+              <div className="text-center p-3 bg-white/5 rounded-xl">
+                <p className="text-sm text-gray-500 mb-1">💊 추천 회복템</p>
+                <p
+                  className="text-2xl font-bold text-blue-400"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  {recovery}
+                </p>
               </div>
             </div>
           </div>
@@ -974,10 +1013,14 @@ export default function MentalHPEngine() {
                 </div>
               </Link>
               {[
-                { emoji: "🍡", title: "나는 어떤 탕후루?", desc: "COMING SOON" },
                 {
-                  emoji: "☕",
-                  title: "나는 어떤 카페 음료?",
+                  emoji: "💕",
+                  title: "나의 연애 시장가 측정기",
+                  desc: "COMING SOON",
+                },
+                {
+                  emoji: "💰",
+                  title: "나의 시가총액 측정기",
                   desc: "COMING SOON",
                 },
               ].map((t, i) => (
