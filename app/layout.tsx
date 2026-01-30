@@ -3,7 +3,7 @@ import { Black_Han_Sans, Noto_Sans_KR } from "next/font/google";
 import Script from "next/script";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import GoogleAnalytics from "./components/GoogleAnalytics";
+import GoogleAnalyticsPageView from "./components/GoogleAnalytics";
 import "./globals.css";
 
 const displayFont = Black_Han_Sans({
@@ -58,7 +58,20 @@ export default function RootLayout({
           src="https://developers.kakao.com/sdk/js/kakao.min.js"
           strategy="afterInteractive"
         />
-        <GoogleAnalytics />
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-PK95F0LSPM"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-PK95F0LSPM', { send_page_view: true });
+          `}
+        </Script>
+        <GoogleAnalyticsPageView />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
