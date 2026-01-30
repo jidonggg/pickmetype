@@ -97,10 +97,14 @@ export default function MentalHPEngine() {
   const [toastMsg, setToastMsg] = useState("");
   const shareCardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const initKakao = () => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(KAKAO_KEY);
     }
+  };
+
+  useEffect(() => {
+    initKakao();
   }, []);
 
   const toast = useCallback((msg: string) => {
@@ -225,6 +229,7 @@ export default function MentalHPEngine() {
 
   const shareToKakao = () => {
     gtagEvent("share", { method: "kakao", quiz_id: "mental-hp" });
+    initKakao();
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
         window.Kakao.Share.sendDefault({

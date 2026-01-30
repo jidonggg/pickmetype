@@ -108,11 +108,15 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
   const [toastMsg, setToastMsg] = useState("");
   const shareCardRef = useRef<HTMLDivElement>(null);
 
-  // Kakao SDK init
-  useEffect(() => {
+  const initKakao = () => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(KAKAO_KEY);
     }
+  };
+
+  // Kakao SDK init
+  useEffect(() => {
+    initKakao();
   }, []);
 
   const toast = useCallback((msg: string) => {
@@ -180,6 +184,7 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
   const shareToKakao = () => {
     if (!result) return;
     gtagEvent("share", { method: "kakao", quiz_id: config.id, result_type: result });
+    initKakao();
     const r = results[result];
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
