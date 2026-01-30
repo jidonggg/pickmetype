@@ -241,9 +241,9 @@ export default function MarketCapEngine() {
     }
   };
 
-  const shareToInstagram = async () => {
+  const saveResultImage = async () => {
     if (!shareCardRef.current) return;
-    gtagEvent("share", { method: "instagram", quiz_id: "market-cap" });
+    gtagEvent("share", { method: "save_image", quiz_id: "market-cap" });
     const el = shareCardRef.current;
     const orig = el.style.cssText;
     try {
@@ -262,24 +262,15 @@ export default function MarketCapEngine() {
         canvas.toBlob(resolve, "image/png")
       );
       if (!blob) return;
-      const file = new File([blob], "market-cap-result.png", { type: "image/png" });
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: "나의 시가총액 측정기",
-          text: getShareText(),
-        });
-      } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "market-cap-result.png";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        toast("이미지 저장 완료! 인스타에 공유해보세요");
-      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "market-cap-result.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast("이미지 저장 완료! 인스타 스토리에 올려보세요");
     } catch {
       el.style.cssText = orig;
       toast("이미지 생성에 실패했어요");
@@ -907,11 +898,11 @@ export default function MarketCapEngine() {
                 카카오톡
               </button>
               <button
-                onClick={shareToInstagram}
+                onClick={saveResultImage}
                 className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white rounded-2xl font-bold text-[12px] transition-colors"
               >
                 <span className="text-2xl">📸</span>
-                인스타
+                이미지 저장
               </button>
               <button
                 onClick={shareToX}
