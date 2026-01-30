@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { blogPosts } from "./blog/data";
+import BlogCard from "./components/BlogCard";
 
 export const metadata: Metadata = {
   title: "pickmetype | 나의 유형 찾기",
@@ -28,20 +30,20 @@ const tests = [
     gradient: "from-emerald-500 via-green-500 to-teal-500",
   },
   {
-    id: "tanghuru",
-    emoji: "🍡",
-    title: "나는 어떤 탕후루?",
+    id: "love-value",
+    emoji: "💕",
+    title: "나의 연애 시장가 측정기",
     subtitle: "COMING SOON",
     available: false,
-    gradient: "from-pink-400 to-red-400",
+    gradient: "from-pink-400 via-rose-400 to-red-400",
   },
   {
-    id: "cafe-drink",
-    emoji: "☕",
-    title: "나는 어떤 카페 음료?",
-    subtitle: "COMING SOON",
-    available: false,
-    gradient: "from-amber-600 to-yellow-500",
+    id: "market-cap",
+    emoji: "💰",
+    title: "나의 시가총액 측정기",
+    subtitle: "내가 회사라면 시가총액은?",
+    available: true,
+    gradient: "from-green-500 via-emerald-500 to-teal-500",
   },
 ];
 
@@ -103,6 +105,37 @@ export default function Home() {
               </div>
             )
           )}
+        </div>
+
+        {/* blog preview */}
+        <div className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2
+              className="text-lg"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              최신 블로그
+            </h2>
+            <Link
+              href="/blog"
+              className="text-sm text-orange-500 hover:underline font-medium"
+            >
+              전체보기 →
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {blogPosts.slice(0, 3).map((post) => (
+              <BlogCard
+                key={post.slug}
+                slug={post.slug}
+                title={post.title}
+                description={post.description}
+                category={post.category}
+                publishedAt={post.publishedAt}
+                readingTime={post.readingTime}
+              />
+            ))}
+          </div>
         </div>
 
         <p className="text-xs text-gray-400 text-center mt-8">

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Black_Han_Sans, Noto_Sans_KR } from "next/font/google";
 import Script from "next/script";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import "./globals.css";
 
 const displayFont = Black_Han_Sans({
@@ -42,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${displayFont.variable} ${bodyFont.variable} antialiased`}
+        className={`${displayFont.variable} ${bodyFont.variable} antialiased flex flex-col min-h-[100dvh]`}
         style={{ fontFamily: "var(--font-body)" }}
       >
         <Script
@@ -55,7 +57,9 @@ export default function RootLayout({
           src="https://developers.kakao.com/sdk/js/kakao.min.js"
           strategy="afterInteractive"
         />
-        {children}
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );
