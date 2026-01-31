@@ -520,7 +520,6 @@ export default function AnimalFaceEngine() {
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            capture="user"
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -571,6 +570,12 @@ export default function AnimalFaceEngine() {
       <div className="min-h-[100dvh] flex flex-col items-center relative bg-gradient-to-b from-violet-50 via-purple-50 to-indigo-50">
         <FloatingEmojis />
         <div className="relative z-10 w-full max-w-md mx-auto px-4 py-5">
+          <button
+            onClick={handleRestart}
+            className="text-sm text-gray-400 hover:text-gray-600 transition-colors mb-3 py-1"
+          >
+            \u2190 \uCC98\uC74C\uC73C\uB85C
+          </button>
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm text-gray-500 mb-1.5">
               <span className="font-medium">
@@ -666,6 +671,15 @@ export default function AnimalFaceEngine() {
           <p className="text-purple-300 text-sm mt-4 animate-pulse">
             AI\uAC00 \uBD84\uC11D\uD558\uACE0 \uC788\uC5B4\uC694...
           </p>
+
+          {mode === "photo" && (
+            <button
+              onClick={handleRestart}
+              className="mt-6 text-sm text-gray-400 hover:text-gray-300 transition-colors underline py-1"
+            >
+              \uCDE8\uC18C\uD558\uACE0 \uCC98\uC74C\uC73C\uB85C
+            </button>
+          )}
 
           <div className="mt-8">
             <AdBanner />

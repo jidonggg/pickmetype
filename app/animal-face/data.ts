@@ -250,7 +250,7 @@ export const quizQuestions: QuizQuestion[] = [
     answers: [
       {
         text: "\uBD84\uC704\uAE30 \uBA54\uC774\uCEE4! \uB0B4\uAC00 \uC788\uC73C\uBA74 \uC2E0\uB09C\uB2E4 \uD83C\uDF89",
-        scores: { dog: 2, hamster: 2, fox: 1 },
+        scores: { dog: 2, hamster: 1, dino: 1 },
       },
       {
         text: "\uC870\uC6A9\uD788 \uAD00\uCC30\uD558\uB2E4 \uD575\uC2EC\uB9CC \uCF59 \uC9DA\uC5B4\uB0B4\uB294 \uD0C0\uC785 \uD83E\uDDD0",
@@ -292,7 +292,7 @@ export const quizQuestions: QuizQuestion[] = [
     answers: [
       {
         text: "\uBC14\uB85C \uD45C\uD604\uD55C\uB2E4! \uD654 \uCC38\uB294 \uAC74 \uBAA8\uD574 \uD83D\uDD25",
-        scores: { tiger: 2, dog: 1, hamster: 1 },
+        scores: { tiger: 2, dino: 1, hamster: 1 },
       },
       {
         text: "\uB0B4\uC0C9\uD558\uC9C0 \uC54A\uC9C0\uB9CC \uC18D\uC73C\uB85C \uBD80\uAE00\uBD80\uAE00 \uD83D\uDE24",
@@ -334,7 +334,7 @@ export const quizQuestions: QuizQuestion[] = [
     answers: [
       {
         text: "\uC560\uAD50 \uD3ED\uBC1C! \uC88B\uC544\uD558\uBA74 \uC628 \uBAB8\uC73C\uB85C \uD45C\uD604 \uD49C",
-        scores: { dog: 2, rabbit: 2, hamster: 1 },
+        scores: { dog: 2, rabbit: 1, dino: 1 },
       },
       {
         text: "\uCE20\uB370\uB808\u2026 \uC88B\uC544\uD558\uB294\uB370 \uD45C\uD604 \uBABB \uD568 \uD83D\uDE33",
@@ -418,7 +418,7 @@ export const quizQuestions: QuizQuestion[] = [
     answers: [
       {
         text: "\uC6B4\uB3D9\uC774\uB098 \uC0B0\uCC45\uC73C\uB85C \uBAB8\uC744 \uC6C0\uC9C1\uC774\uAE30 \uD83C\uDFC3",
-        scores: { wolf: 2, tiger: 1, dog: 1 },
+        scores: { wolf: 2, tiger: 1, dino: 1 },
       },
       {
         text: "\uB9DB\uC788\uB294 \uAC70 \uBA39\uC73C\uBA74\uC11C \uBB58\uD558\uAC8C \uBCF4\uAE30 \uD83C\uDF70",
