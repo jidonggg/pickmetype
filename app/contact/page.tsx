@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ReportForm from "../components/ReportForm";
 
 export const metadata: Metadata = {
   title: "문의하기 | pickmetype",
-  description: "pickmetype 문의 및 자주 묻는 질문",
+  description: "pickmetype 오류 제보, 문의 및 자주 묻는 질문",
   openGraph: {
     title: "문의하기 | pickmetype",
-    description: "pickmetype 문의 및 자주 묻는 질문",
+    description: "pickmetype 오류 제보, 문의 및 자주 묻는 질문",
   },
 };
 
@@ -37,39 +38,37 @@ export default function ContactPage() {
   return (
     <div className="min-h-[60dvh] flex flex-col items-center px-4 py-10">
       <div className="w-full max-w-lg mx-auto space-y-6">
-        {/* Contact */}
+        {/* Report Form */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
           <h1
-            className="text-2xl mb-6"
+            className="text-2xl mb-2"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            문의하기
+            오류 제보 / 문의
           </h1>
+          <p className="text-sm text-gray-500 mb-6">
+            오류, 오탈자, 개선 제안 등 무엇이든 알려주세요!
+          </p>
 
-          <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
-            <p>
-              pickmetype에 대한 문의, 제안, 오류 신고 등은 아래 이메일로
-              연락해 주세요.
-            </p>
+          <ReportForm />
+        </div>
 
-            <div className="bg-orange-50 rounded-xl p-4">
-              <p className="font-semibold text-gray-800 mb-1">이메일 문의</p>
-              <a
-                href="mailto:pickmetype@gmail.com"
-                className="text-orange-500 hover:underline font-medium"
-              >
-                pickmetype@gmail.com
-              </a>
-            </div>
-
-            <p className="text-gray-500 text-xs">
-              문의 시 다음 정보를 포함해 주시면 빠르게 답변드릴 수 있습니다:
-            </p>
-            <ul className="list-disc list-inside text-xs text-gray-500 space-y-1">
-              <li>문의 유형 (오류 신고 / 제안 / 기타)</li>
-              <li>이용 환경 (기기, 브라우저)</li>
-              <li>문제 상황에 대한 구체적인 설명</li>
-            </ul>
+        {/* Direct Email */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
+          <h2
+            className="text-xl mb-4"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            이메일 직접 문의
+          </h2>
+          <div className="bg-orange-50 rounded-xl p-4">
+            <p className="font-semibold text-gray-800 mb-1">이메일</p>
+            <a
+              href="mailto:pickmetype@gmail.com"
+              className="text-orange-500 hover:underline font-medium"
+            >
+              pickmetype@gmail.com
+            </a>
           </div>
         </div>
 
