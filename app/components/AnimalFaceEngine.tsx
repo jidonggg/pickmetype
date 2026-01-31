@@ -176,7 +176,7 @@ export default function AnimalFaceEngine() {
 
   /* ---------- zoom/pan handlers ---------- */
   const getMaxPan = (z: number) => {
-    const maxPx = ((z - 1) / (2 * z)) * (imgContainerRef.current?.offsetWidth || 300);
+    const maxPx = ((z - 1) / 2) * (imgContainerRef.current?.offsetWidth || 300);
     return maxPx;
   };
 
