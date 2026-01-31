@@ -31,21 +31,21 @@ interface AnalysisResult {
 }
 
 const ANALYSIS_STEPS = [
-  "\uC5BC\uAD74 \uD615\uD0DC \uBD84\uC11D \uC911...",
-  "\uB208/\uCF54/\uC785 \uD2B9\uC9D5 \uBD84\uC11D \uC911...",
-  "\uB3D9\uBB3C\uC0C1 \uB9E4\uCE6D \uC911...",
-  "\uC131\uACA9 \uBD84\uC11D \uC911...",
+  "얼굴 형태 분석 중...",
+  "눈/코/입 특징 분석 중...",
+  "동물상 매칭 중...",
+  "성격 분석 중...",
 ];
 
 const OTHER_TESTS = [
-  { emoji: "\uD83C\uDF6A", title: "\uB098\uB294 \uC5B4\uB5A4 \uB450\uCE00\uCFE0?", desc: "\uB450\uBC14\uC774 \uCE00\uB4DD \uCFE0\uD0A4 \uC131\uACA9 \uD14C\uC2A4\uD2B8", href: "/dubai-cookie" },
-  { emoji: "\u2694\uFE0F", title: "\uB098\uC758 \uBA58\uD0C8 HP \uCE21\uC815\uAE30", desc: "RPG \uC2A4\uD0EF\uC73C\uB85C \uBCF4\uB294 \uB0B4 \uBA58\uD0C8!", href: "/mental-hp" },
-  { emoji: "\uD83D\uDCB0", title: "\uB098\uC758 \uC2DC\uAC00\uCD1D\uC561 \uCE21\uC815\uAE30", desc: "\uB0B4\uAC00 \uD68C\uC0AC\uB77C\uBA74 \uC2DC\uAC00\uCD1D\uC561\uC740?", href: "/market-cap" },
+  { emoji: "🍪", title: "나는 어떤 두츀쿠?", desc: "두바이 츀득 쿠키 성격 테스트", href: "/dubai-cookie" },
+  { emoji: "⚔️", title: "나의 멘탈 HP 측정기", desc: "RPG 스탯으로 보는 내 멘탈!", href: "/mental-hp" },
+  { emoji: "💰", title: "나의 시가총액 측정기", desc: "내가 회사라면 시가총액은?", href: "/market-cap" },
 ];
 
 /* ==================== Floating Emojis ==================== */
 function FloatingEmojis() {
-  const emojis = ["\uD83D\uDC36", "\uD83D\uDC31", "\uD83E\uDD8A", "\uD83D\uDC3B", "\uD83D\uDC30", "\uD83E\uDD8C", "\uD83E\uDD95", "\uD83D\uDC3A", "\uD83D\uDC27", "\uD83E\uDD89", "\uD83D\uDC39", "\uD83D\uDC2F", "\uD83D\uDC2C", "\uD83E\uDD8B", "\uD83D\uDC3F\uFE0F", "\uD83E\uDDA5", "\uD83D\uDC3C", "\uD83E\uDD9C"];
+  const emojis = ["🐶", "🐱", "🦊", "🐻", "🐰", "🦌", "🦕", "🐺", "🐧", "🦉", "🐹", "🐯", "🐬", "🦋", "🐿️", "🦥", "🐼", "🦜"];
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {emojis.map((emoji, i) => (
@@ -155,7 +155,7 @@ export default function AnimalFaceEngine() {
 
   const handleFileSelect = async (file: File) => {
     if (!file.type.startsWith("image/")) {
-      setUploadError("\uC774\uBBF8\uC9C0 \uD30C\uC77C\uB9CC \uC5C5\uB85C\uB4DC\uD560 \uC218 \uC788\uC5B4\uC694.");
+      setUploadError("이미지 파일만 업로드할 수 있어요.");
       return;
     }
     setUploadError(null);
@@ -163,7 +163,7 @@ export default function AnimalFaceEngine() {
       const resized = await resizeImage(file);
       setUploadPreview(resized);
     } catch {
-      setUploadError("\uC774\uBBF8\uC9C0 \uCC98\uB9AC\uC5D0 \uC2E4\uD328\uD588\uC5B4\uC694.");
+      setUploadError("이미지 처리에 실패했어요.");
     }
   };
 
@@ -192,12 +192,12 @@ export default function AnimalFaceEngine() {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "\uBD84\uC11D \uC2E4\uD328");
+        throw new Error(err.error || "분석 실패");
       }
 
       const data: AnalysisResult = await res.json();
       const animal = animalTypes[data.animal];
-      if (!animal) throw new Error("\uC54C \uC218 \uC5C6\uB294 \uB3D9\uBB3C\uC0C1");
+      if (!animal) throw new Error("알 수 없는 동물상");
 
       setAiAnalysis(data);
       setResultAnimal(animal);
@@ -207,7 +207,7 @@ export default function AnimalFaceEngine() {
       gtagEvent("quiz_complete", { quiz_id: "animal-face", result_type: data.animal });
     } catch (err) {
       clearInterval(stepInterval);
-      const message = err instanceof Error ? err.message : "\uBD84\uC11D \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC5B4\uC694.";
+      const message = err instanceof Error ? err.message : "분석 중 오류가 발생했어요.";
       setUploadError(message);
       setPhase("upload");
     }
@@ -288,7 +288,7 @@ export default function AnimalFaceEngine() {
 
   const getShareText = () => {
     if (!resultAnimal) return "";
-    return `\uB098\uC758 \uB3D9\uBB3C\uC0C1\uC740 "${resultAnimal.name}" ${resultAnimal.emoji}\n${resultAnimal.shortDesc}\n\n\uB108\uB3C4 \uD14C\uC2A4\uD2B8 \uD574\uBD10!`;
+    return `나의 동물상은 "${resultAnimal.name}" ${resultAnimal.emoji}\n${resultAnimal.shortDesc}\n\n너도 테스트 해봐!`;
   };
 
   const shareToKakao = () => {
@@ -299,18 +299,18 @@ export default function AnimalFaceEngine() {
       if (window.Kakao && window.Kakao.isInitialized()) {
         window.Kakao.Share.sendDefault({
           objectType: "text",
-          text: `${resultAnimal.emoji} \uB098\uC758 \uB3D9\uBB3C\uC0C1: ${resultAnimal.name}\n\n${resultAnimal.shortDesc}`,
+          text: `${resultAnimal.emoji} 나의 동물상: ${resultAnimal.name}\n\n${resultAnimal.shortDesc}`,
           link: {
             mobileWebUrl: "https://pickmetype.vercel.app/animal-face",
             webUrl: "https://pickmetype.vercel.app/animal-face",
           },
-          buttonTitle: "\uB098\uB3C4 \uD14C\uC2A4\uD2B8\uD558\uAE30",
+          buttonTitle: "나도 테스트하기",
         });
       } else {
         shareNative();
       }
     } catch (e) {
-      alert("\uCE74\uCE74\uC624 \uACF5\uC720 \uC624\uB958: " + JSON.stringify(e));
+      alert("카카오 공유 오류: " + JSON.stringify(e));
       shareNative();
     }
   };
@@ -327,9 +327,9 @@ export default function AnimalFaceEngine() {
     gtagEvent("share", { method: "copy_link", quiz_id: "animal-face", result_type: resultAnimal?.id || "" });
     try {
       await navigator.clipboard.writeText(shareUrl);
-      toast("\uB9C1\uD06C\uAC00 \uBCF5\uC0AC\uB418\uC5C8\uC5B4\uC694! \uD83D\uDCCB");
+      toast("링크가 복사되었어요! 📋");
     } catch {
-      toast("\uB9C1\uD06C \uBCF5\uC0AC\uC5D0 \uC2E4\uD328\uD588\uC5B4\uC694 \uD83D\uDE22");
+      toast("링크 복사에 실패했어요 😢");
     }
   };
 
@@ -337,7 +337,7 @@ export default function AnimalFaceEngine() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "AI \uB2EE\uC740 \uB3D9\uBB3C\uC0C1 \uBD84\uC11D\uAE30",
+          title: "AI 닮은 동물상 분석기",
           text: getShareText(),
           url: shareUrl,
         });
@@ -382,11 +382,11 @@ export default function AnimalFaceEngine() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        toast("\uC774\uBBF8\uC9C0 \uC800\uC7A5 \uC644\uB8CC! \uC778\uC2A4\uD0C0 \uC2A4\uD1A0\uB9AC\uC5D0 \uC62C\uB824\uBCF4\uC138\uC694 \uD83D\uDCF8");
+        toast("이미지 저장 완료! 인스타 스토리에 올려보세요 📸");
       }
     } catch {
       el.style.cssText = orig;
-      toast("\uC774\uBBF8\uC9C0 \uC0DD\uC131\uC5D0 \uC2E4\uD328\uD588\uC5B4\uC694 \uD83D\uDE22");
+      toast("이미지 생성에 실패했어요 😢");
     }
   };
 
@@ -400,34 +400,55 @@ export default function AnimalFaceEngine() {
 
           <div className="w-full mt-2 mb-6 text-center animate-fade-in">
             <div className="text-7xl mb-5 animate-bounce-slow">
-              \uD83D\uDC3E
+              🐾
             </div>
 
             <h1
               className="text-[2.5rem] leading-tight mb-3"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              AI \uB2EE\uC740
+              AI 닮은
               <br />
               <span className="relative inline-block mt-1">
                 <span className="relative z-10 bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                  \uB3D9\uBB3C\uC0C1 \uBD84\uC11D\uAE30
+                  동물상 분석기
                 </span>
                 <span className="absolute -bottom-1 left-0 right-0 h-3 bg-purple-200/60 -rotate-1 rounded" />
               </span>
             </h1>
 
-            <p className="text-gray-600 text-[15px] mt-3">
-              AI\uAC00 \uBD84\uC11D\uD558\uB294
-            </p>
-            <p className="text-gray-600 text-[15px] mb-5">
-              \uB098\uC758 \uB2EE\uC740 \uB3D9\uBB3C\uC0C1\uC740?
+            <p className="text-gray-600 text-[15px] mt-3 mb-6">
+              사진 한 장이면 AI가 당신의 동물상을 분석해드려요!
             </p>
 
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-gray-500 mb-6 shadow-sm">
-              <span>\uD83D\uDCF8 \uC0AC\uC9C4 \uBD84\uC11D</span>
-              <span className="w-1 h-1 bg-gray-300 rounded-full" />
-              <span>\uD83D\uDCDD \uD034\uC988 15\uBB38\uD56D</span>
+            {/* Feature Cards */}
+            <div className="w-full grid grid-cols-3 gap-2 mb-5 px-1">
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.1s" }}>
+                <div className="text-2xl mb-1">🤖</div>
+                <p className="text-[11px] font-bold text-gray-700">AI 얼굴 분석</p>
+                <p className="text-[10px] text-gray-400">사진 or 퀴즈</p>
+              </div>
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.2s" }}>
+                <div className="text-2xl mb-1">🎯</div>
+                <p className="text-[11px] font-bold text-gray-700">18가지 결과</p>
+                <p className="text-[10px] text-gray-400">다양한 동물상</p>
+              </div>
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.3s" }}>
+                <div className="text-2xl mb-1">💕</div>
+                <p className="text-[11px] font-bold text-gray-700">성격/연애/궁합</p>
+                <p className="text-[10px] text-gray-400">상세 분석 결과</p>
+              </div>
+            </div>
+
+            {/* How it works */}
+            <div className="w-full bg-white/60 backdrop-blur-sm rounded-2xl p-4 mb-6 shadow-sm animate-scale-in" style={{ animationDelay: "0.4s" }}>
+              <div className="flex items-center justify-center gap-2 text-sm">
+                <span className="bg-purple-100 text-purple-600 px-3 py-1.5 rounded-full font-bold text-[12px]">📸 사진 업로드</span>
+                <span className="text-gray-300">→</span>
+                <span className="bg-purple-100 text-purple-600 px-3 py-1.5 rounded-full font-bold text-[12px]">🤖 AI 분석</span>
+                <span className="text-gray-300">→</span>
+                <span className="bg-purple-100 text-purple-600 px-3 py-1.5 rounded-full font-bold text-[12px]">🎉 결과 확인</span>
+              </div>
             </div>
           </div>
 
@@ -436,7 +457,7 @@ export default function AnimalFaceEngine() {
             className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 text-white text-xl font-bold rounded-2xl shadow-lg shadow-purple-200/50 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 animate-pulse-soft mb-3"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            \uD83D\uDCF8 \uC0AC\uC9C4\uC73C\uB85C \uBD84\uC11D\uD558\uAE30
+            📸 사진으로 분석하기
           </button>
 
           <button
@@ -444,11 +465,11 @@ export default function AnimalFaceEngine() {
             className="quiz-btn w-full max-w-xs py-4 px-8 bg-white/80 backdrop-blur-sm text-purple-600 text-lg font-bold rounded-2xl shadow-md border-2 border-purple-200 hover:border-purple-400 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            \uD83D\uDCDD \uD034\uC988\uB85C \uBD84\uC11D\uD558\uAE30
+            📝 퀴즈로 분석하기
           </button>
 
           <p className="text-xs text-gray-400 mt-3 mb-6 pb-safe">
-            \uACB0\uACFC\uB294 \uC7AC\uBBF8\uB85C\uB9CC \uBD10\uC8FC\uC138\uC694 :)
+            결과는 재미로만 봐주세요 :)
           </p>
         </div>
       </div>
@@ -465,17 +486,17 @@ export default function AnimalFaceEngine() {
             onClick={() => { setPhase("intro"); setUploadPreview(null); setUploadError(null); }}
             className="text-sm text-gray-400 hover:text-gray-600 transition-colors mb-4"
           >
-            \u2190 \uB4A4\uB85C\uAC00\uAE30
+            ← 뒤로가기
           </button>
 
           <h2
             className="text-2xl text-center mb-2"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            \uC0AC\uC9C4\uC744 \uC62C\uB824\uC8FC\uC138\uC694 \uD83D\uDCF8
+            사진을 올려주세요 📸
           </h2>
           <p className="text-center text-gray-500 text-sm mb-6">
-            \uC5BC\uAD74\uC774 \uC798 \uBCF4\uC774\uB294 \uC0AC\uC9C4\uC77C\uC218\uB85D \uC815\uD655\uD574\uC694!
+            얼굴이 잘 보이는 사진일수록 정확해요!
           </p>
 
           {/* Upload Area */}
@@ -498,9 +519,9 @@ export default function AnimalFaceEngine() {
               />
             ) : (
               <>
-                <div className="text-6xl mb-4">\uD83D\uDCF7</div>
-                <p className="text-gray-500 font-medium mb-1">\uC0AC\uC9C4\uC744 \uC5C5\uB85C\uB4DC\uD558\uC138\uC694</p>
-                <p className="text-gray-400 text-sm">\uD074\uB9AD \uB610\uB294 \uB4DC\uB798\uADF8 \uC575 \uB4DC\uB86D</p>
+                <div className="text-6xl mb-4">📷</div>
+                <p className="text-gray-500 font-medium mb-1">사진을 업로드하세요</p>
+                <p className="text-gray-400 text-sm">클릭 또는 드래그 앵 드롭</p>
               </>
             )}
           </div>
@@ -525,13 +546,13 @@ export default function AnimalFaceEngine() {
                 onClick={() => { setUploadPreview(null); fileInputRef.current?.click(); }}
                 className="flex-1 py-3 bg-white/80 text-purple-600 font-bold rounded-2xl border-2 border-purple-200 hover:border-purple-400 transition-all text-sm"
               >
-                \uB2E4\uC2DC \uC120\uD0DD
+                다시 선택
               </button>
               <button
                 onClick={handleAnalyzePhoto}
                 className="flex-1 py-3 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all text-sm"
               >
-                \uBD84\uC11D\uD558\uAE30 \u2728
+                분석하기 ✨
               </button>
             </div>
           )}
@@ -541,7 +562,7 @@ export default function AnimalFaceEngine() {
               onClick={handleQuizMode}
               className="text-sm text-purple-400 hover:text-purple-600 transition-colors underline"
             >
-              \uD034\uC988\uB85C \uBD84\uC11D\uD558\uACE0 \uC2F6\uB2E4\uBA74?
+              퀴즈로 분석하고 싶다면?
             </button>
           </div>
         </div>
@@ -562,7 +583,7 @@ export default function AnimalFaceEngine() {
             onClick={handleRestart}
             className="text-sm text-gray-400 hover:text-gray-600 transition-colors mb-3 py-1"
           >
-            \u2190 \uCC98\uC74C\uC73C\uB85C
+            ← 처음으로
           </button>
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm text-gray-500 mb-1.5">
@@ -617,7 +638,7 @@ export default function AnimalFaceEngine() {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center relative px-4 bg-gradient-to-b from-gray-900 via-purple-900 to-indigo-900">
         <div className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center text-center">
-          <div className="text-7xl mb-8 animate-bounce-slow">\uD83D\uDC3E</div>
+          <div className="text-7xl mb-8 animate-bounce-slow">🐾</div>
 
           <div className="space-y-4 mb-8 w-full max-w-xs">
             {ANALYSIS_STEPS.map((step, i) => (
@@ -636,7 +657,7 @@ export default function AnimalFaceEngine() {
                       : "bg-gray-600 text-gray-400"
                   }`}
                 >
-                  {i < analysisStep ? "\u2713" : i + 1}
+                  {i < analysisStep ? "✓" : i + 1}
                 </div>
                 <span
                   className={`text-sm ${
@@ -657,7 +678,7 @@ export default function AnimalFaceEngine() {
           </div>
 
           <p className="text-purple-300 text-sm mt-4 animate-pulse">
-            AI\uAC00 \uBD84\uC11D\uD558\uACE0 \uC788\uC5B4\uC694...
+            AI가 분석하고 있어요...
           </p>
 
           {mode === "photo" && (
@@ -665,7 +686,7 @@ export default function AnimalFaceEngine() {
               onClick={handleRestart}
               className="mt-6 text-sm text-gray-400 hover:text-gray-300 transition-colors underline py-1"
             >
-              \uCDE8\uC18C\uD558\uACE0 \uCC98\uC74C\uC73C\uB85C
+              취소하고 처음으로
             </button>
           )}
 
@@ -714,7 +735,7 @@ export default function AnimalFaceEngine() {
             </div>
             <div style={{ width: 60, height: 2, background: r.color, opacity: 0.3, borderRadius: 1, marginBottom: 24 }} />
             <p style={{ fontSize: 13, color: "#999", letterSpacing: 4, fontWeight: 500, marginBottom: 16 }}>
-              \uB098\uC758 \uB3D9\uBB3C\uC0C1\uC740
+              나의 동물상은
             </p>
             <div style={{ fontSize: 88, marginBottom: 12, lineHeight: 1 }}>{r.emoji}</div>
             <h2 style={{ fontSize: 32, fontWeight: 900, color: r.color, marginBottom: 6, fontFamily: "'Black Han Sans', sans-serif" }}>
@@ -737,10 +758,10 @@ export default function AnimalFaceEngine() {
             </div>
             <div style={{ position: "absolute", bottom: 24, width: "calc(100% - 72px)", textAlign: "center" }}>
               <div style={{ background: r.color, color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
-                \uB098\uB3C4 \uD14C\uC2A4\uD2B8\uD558\uAE30 \u2192 pickmetype.vercel.app
+                나도 테스트하기 → pickmetype.vercel.app
               </div>
               <p style={{ fontSize: 11, color: "#bbb" }}>
-                AI \uB2EE\uC740 \uB3D9\uBB3C\uC0C1 \uBD84\uC11D\uAE30
+                AI 닮은 동물상 분석기
               </p>
             </div>
           </div>
@@ -750,7 +771,7 @@ export default function AnimalFaceEngine() {
           {/* header */}
           <div className="w-full text-center animate-fade-in">
             <p className="text-sm text-gray-500 mb-2 font-medium tracking-wide">
-              \uB2F9\uC2E0\uC758 \uB3D9\uBB3C\uC0C1\uC740...
+              당신의 동물상은...
             </p>
             <div className="text-8xl my-5 animate-bounce-slow">{r.emoji}</div>
             <h1 className="text-3xl mb-1.5" style={{ fontFamily: "var(--font-display)", color: r.color }}>
@@ -765,9 +786,9 @@ export default function AnimalFaceEngine() {
           {aiAnalysis && (
             <div className="w-full bg-gradient-to-r from-violet-50 to-purple-50 border border-purple-200 rounded-3xl p-5 shadow-lg mb-4 animate-slide-up">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">\uD83E\uDD16</span>
+                <span className="text-lg">🤖</span>
                 <h3 className="text-lg font-bold" style={{ fontFamily: "var(--font-display)" }}>
-                  AI \uBD84\uC11D \uCF54\uBA58\uD2B8
+                  AI 분석 코멘트
                 </h3>
               </div>
               <p className="text-[15px] leading-relaxed text-gray-700">
@@ -779,7 +800,7 @@ export default function AnimalFaceEngine() {
           {/* Top 3 match bar chart */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.06s" }}>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              \uB9E4\uCE6D \uBE44\uC728 \uD83D\uDCCA
+              매칭 비율 📊
             </h3>
             <div className="space-y-3">
               {topMatches.map((m, i) => {
@@ -813,7 +834,7 @@ export default function AnimalFaceEngine() {
           {/* personality */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              \uC131\uACA9 \uBD84\uC11D \uD83D\uDD0D
+              성격 분석 🔍
             </h3>
             <p className="text-[15px] leading-relaxed whitespace-pre-line text-gray-700">
               {r.personality}
@@ -830,11 +851,11 @@ export default function AnimalFaceEngine() {
           {/* strengths & weaknesses */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.14s" }}>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              \uC7A5\uC810 & \uB2E8\uC810 \u2696\uFE0F
+              장점 & 단점 ⚖️
             </h3>
             <div className="space-y-3">
               <div>
-                <p className="text-sm font-bold text-green-600 mb-1.5">\uD83D\uDC4D \uC7A5\uC810</p>
+                <p className="text-sm font-bold text-green-600 mb-1.5">👍 장점</p>
                 <div className="flex flex-wrap gap-1.5">
                   {r.strengths.map((s, i) => (
                     <span key={i} className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-[13px] font-medium">
@@ -844,7 +865,7 @@ export default function AnimalFaceEngine() {
                 </div>
               </div>
               <div>
-                <p className="text-sm font-bold text-red-500 mb-1.5">\uD83D\uDC4E \uB2E8\uC810</p>
+                <p className="text-sm font-bold text-red-500 mb-1.5">👎 단점</p>
                 <div className="flex flex-wrap gap-1.5">
                   {r.weaknesses.map((w, i) => (
                     <span key={i} className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[13px] font-medium">
@@ -859,7 +880,7 @@ export default function AnimalFaceEngine() {
           {/* love style */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.18s" }}>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              \uC5F0\uC560 \uC2A4\uD0C0\uC77C \uD83D\uDC95
+              연애 스타일 💕
             </h3>
             <p className="text-[15px] leading-relaxed text-gray-700">{r.loveStyle}</p>
           </div>
@@ -867,15 +888,15 @@ export default function AnimalFaceEngine() {
           {/* compatibility */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.22s" }}>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              \uAD81\uD569 \uBCF4\uAE30 \uD83D\uDC9E
+              궁합 보기 💞
             </h3>
             <div className="space-y-2.5">
               <div className="flex items-center gap-3 bg-pink-50 p-3 rounded-xl">
-                <span className="text-sm font-bold text-pink-500 whitespace-nowrap">\uCC30\uB5A1\uAD81\uD569</span>
+                <span className="text-sm font-bold text-pink-500 whitespace-nowrap">찰떡궁합</span>
                 <span className="text-[15px]">{r.bestMatch}</span>
               </div>
               <div className="flex items-center gap-3 bg-purple-50 p-3 rounded-xl">
-                <span className="text-sm font-bold text-purple-500 whitespace-nowrap">\uD658\uC7A5\uC870\uD569</span>
+                <span className="text-sm font-bold text-purple-500 whitespace-nowrap">환장조합</span>
                 <span className="text-[15px]">{r.funMatch}</span>
               </div>
             </div>
@@ -884,7 +905,7 @@ export default function AnimalFaceEngine() {
           {/* celebrities */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.26s" }}>
             <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              \uB2EE\uC740 \uC5F0\uC608\uC778 \u2B50
+              닮은 연예인 ⭐
             </h3>
             <div className="flex flex-wrap gap-2">
               {r.celebrities.map((c, i) => (
@@ -898,36 +919,36 @@ export default function AnimalFaceEngine() {
           {/* share */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.3s" }}>
             <h3 className="text-lg font-bold mb-3 text-center" style={{ fontFamily: "var(--font-display)" }}>
-              \uCE5C\uAD6C\uD55C\uD14C \uACF5\uC720\uD558\uAE30 \uD83D\uDCE2
+              친구한테 공유하기 📢
             </h3>
             <div className="grid grid-cols-4 gap-2">
               <button
                 onClick={shareToKakao}
                 className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-[#FEE500] hover:bg-[#FDD800] text-gray-900 rounded-2xl font-bold text-[12px] transition-colors"
               >
-                <span className="text-2xl">\uD83D\uDCAC</span>
-                \uCE74\uCE74\uC624\uD1A1
+                <span className="text-2xl">💬</span>
+                카카오톡
               </button>
               <button
                 onClick={saveResultImage}
                 className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white rounded-2xl font-bold text-[12px] transition-colors"
               >
-                <span className="text-2xl">\uD83D\uDCF8</span>
-                \uC774\uBBF8\uC9C0 \uC800\uC7A5
+                <span className="text-2xl">📸</span>
+                이미지 저장
               </button>
               <button
                 onClick={shareToX}
                 className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-bold text-[12px] transition-colors"
               >
-                <span className="text-2xl">\uD835\uDD4F</span>
-                \uD2B8\uC704\uD130
+                <span className="text-2xl">𝕏</span>
+                트위터
               </button>
               <button
                 onClick={copyLink}
                 className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold text-[12px] transition-colors"
               >
-                <span className="text-2xl">\uD83D\uDD17</span>
-                \uB9C1\uD06C\uBCF5\uC0AC
+                <span className="text-2xl">🔗</span>
+                링크복사
               </button>
             </div>
           </div>
@@ -939,13 +960,13 @@ export default function AnimalFaceEngine() {
             className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 text-white text-lg font-bold rounded-2xl shadow-lg shadow-purple-200/50 hover:shadow-xl transition-all duration-300 mb-5"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            \uB2E4\uC2DC \uD558\uAE30 \uD83D\uDD04
+            다시 하기 🔄
           </button>
 
           {/* other tests */}
           <div className="w-full mb-6 animate-slide-up" style={{ animationDelay: "0.35s" }}>
             <h3 className="text-xl font-bold text-center mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              \uB2E4\uB978 \uD14C\uC2A4\uD2B8\uB3C4 \uD574\uBCFC\uB798? \uD83E\uDDEA
+              다른 테스트도 해볼래? 🧪
             </h3>
             <div className="space-y-2.5">
               {OTHER_TESTS.map((t, i) => (
@@ -968,10 +989,10 @@ export default function AnimalFaceEngine() {
             href="/"
             className="text-sm text-gray-400 hover:text-gray-600 transition-colors mb-2"
           >
-            \u2190 \uC804\uCCB4 \uD14C\uC2A4\uD2B8 \uBAA9\uB85D
+            ← 전체 테스트 목록
           </Link>
           <p className="text-xs text-gray-400 text-center mb-4 pb-safe">
-            \uC774 \uD14C\uC2A4\uD2B8\uB294 \uC7AC\uBBF8\uB85C \uB9CC\uB4E4\uC5B4\uC84C\uC73C\uBA70 \uACFC\uD559\uC801 \uADFC\uAC70\uB294 \uC5C6\uC2B5\uB2C8\uB2E4 :)
+            이 테스트는 재미로 만들어졌으며 과학적 근거는 없습니다 :)
           </p>
         </div>
 

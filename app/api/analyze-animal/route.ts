@@ -83,27 +83,27 @@ export async function POST(request: Request) {
 
   const animalList = ANIMAL_IDS.map((id) => `${id}(${ANIMAL_LABELS[id]})`).join(", ");
 
-  const prompt = `\uC774 \uC0AC\uC9C4\uC758 \uC5BC\uAD74\uC744 \uBD84\uC11D\uD574\uC11C \uB2EE\uC740 \uB3D9\uBB3C\uC0C1\uC744 \uD310\uBCC4\uD574\uC8FC\uC138\uC694.
+  const prompt = `이 사진의 얼굴을 분석해서 닮은 동물상을 판별해주세요.
 
-\uB3D9\uBB3C \uBAA9\uB85D: ${animalList}
+동물 목록: ${animalList}
 
-\uBC18\uB4DC\uC2DC \uC544\uB798 JSON \uD615\uC2DD\uC73C\uB85C\uB9CC \uC751\uB2F5\uD574\uC8FC\uC138\uC694. \uB2E4\uB978 \uD14D\uC2A4\uD2B8\uB294 \uC808\uB300 \uCD94\uAC00\uD558\uC9C0 \uB9C8\uC138\uC694:
+반드시 아래 JSON 형식으로만 응답해주세요. 다른 텍스트는 절대 추가하지 마세요:
 {
-  "animal": "\uC704 \uBAA9\uB85D \uC911 \uD558\uB098\uC758 id (\uC608: dog, cat, fox \uB4F1)",
-  "confidence": 0-100 \uC0AC\uC774\uC758 \uC218\uCE58,
+  "animal": "위 목록 중 하나의 id (예: dog, cat, fox 등)",
+  "confidence": 0-100 사이의 수치,
   "topMatches": [
-    {"animal": "id", "percentage": \uC218\uCE58},
-    {"animal": "id", "percentage": \uC218\uCE58},
-    {"animal": "id", "percentage": \uC218\uCE58}
+    {"animal": "id", "percentage": 수치},
+    {"animal": "id", "percentage": 수치},
+    {"animal": "id", "percentage": 수치}
   ],
-  "analysis": "\uC5BC\uAD74 \uD2B9\uC9D5\uACFC \uD574\uB2F9 \uB3D9\uBB3C\uC0C1\uC758 \uC5F0\uACB0\uACE0\uB9AC\uB97C \uC7AC\uBBF8\uC788\uAC8C \uC124\uBA85 (2-3\uBB38\uC7A5, \uD55C\uAD6D\uC5B4)"
+  "analysis": "얼굴 특징과 해당 동물상의 연결고리를 재미있게 설명 (2-3문장, 한국어)"
 }
 
-\uC8FC\uC758\uC0AC\uD56D:
-- topMatches\uB294 \uC815\uD655\uD788 3\uAC1C, percentage \uD569\uACC4\uB294 100
-- animal \uAC12\uC740 \uBC18\uB4DC\uC2DC \uC704 \uBAA9\uB85D\uC758 id \uC911 \uD558\uB098
-- analysis\uB294 \uC7AC\uBBF8\uC788\uACE0 \uCE5C\uADFC\uD55C \uD1A4\uC73C\uB85C \uD55C\uAD6D\uC5B4\uB85C \uC791\uC131
-- \uC0AC\uB78C \uC5BC\uAD74\uC774 \uC5C6\uC73C\uBA74 \uADF8\uB798\uB3C4 \uC7AC\uBBF8\uB85C \uAC00\uC7A5 \uBE44\uC2B7\uD55C \uB3D9\uBB3C\uC0C1\uC744 \uACB0\uC815\uD574\uC8FC\uC138\uC694`;
+주의사항:
+- topMatches는 정확히 3개, percentage 합계는 100
+- animal 값은 반드시 위 목록의 id 중 하나
+- analysis는 재미있고 친근한 톤으로 한국어로 작성
+- 사람 얼굴이 없으면 그래도 재미로 가장 비슷한 동물상을 결정해주세요`;
 
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
       const errorText = await response.text();
       console.error("Anthropic API error:", response.status, errorText);
       return NextResponse.json(
-        { error: "AI \uBD84\uC11D\uC5D0 \uC2E4\uD328\uD588\uC5B4\uC694. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694." },
+        { error: "AI 분석에 실패했어요. 다시 시도해주세요." },
         { status: 500 }
       );
     }
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
     );
     if (!textContent?.text) {
       return NextResponse.json(
-        { error: "AI \uC751\uB2F5\uC744 \uCC98\uB9AC\uD560 \uC218 \uC5C6\uC5B4\uC694." },
+        { error: "AI 응답을 처리할 수 없어요." },
         { status: 500 }
       );
     }
@@ -175,7 +175,7 @@ export async function POST(request: Request) {
       result.topMatches.length < 3
     ) {
       return NextResponse.json(
-        { error: "AI \uBD84\uC11D \uACB0\uACFC\uB97C \uCC98\uB9AC\uD560 \uC218 \uC5C6\uC5B4\uC694." },
+        { error: "AI 분석 결과를 처리할 수 없어요." },
         { status: 500 }
       );
     }
@@ -184,7 +184,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Analyze animal error:", error);
     return NextResponse.json(
-      { error: "AI \uBD84\uC11D \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC5B4\uC694." },
+      { error: "AI 분석 중 오류가 발생했어요." },
       { status: 500 }
     );
   }
