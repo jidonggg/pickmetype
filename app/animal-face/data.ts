@@ -235,6 +235,108 @@ export const animalTypes: Record<string, AnimalType> = {
     shortDesc: "\uAC15\uB82C\uD558\uACE0 \uCE74\uB9AC\uC2A4\uB9C8 \uB118\uCE58\uB294 \uD0C0\uACE0\uB09C \uB9AC\uB354",
     tags: ["#\uC655\uC758_\uAE30\uC9C8", "#\uB3C4\uC804\uC815\uC2E0", "#\uC790\uC2E0\uAC10_\uD3ED\uBC1C"],
   },
+  dolphin: {
+    id: "dolphin",
+    emoji: "🐬",
+    name: "돌고래상",
+    color: "#0891B2",
+    bgStart: "#CFFAFE",
+    bgEnd: "#ECFEFF",
+    personality: "똑똑하고 사교적인 인싸 중의 인싸!\n어디서든 분위기를 밝히고\n사람들과 즐겁게 어울리는 타입.\n유쾌한 에너지로 모두를 사로잡아요!",
+    loveStyle: "함께 있으면 즐거운 베스트 프렌드형 연인. 같이 새로운 걸 경험하는 걸 좋아해요.",
+    strengths: ["사교성", "유쾌함", "지적 매력", "적응력"],
+    weaknesses: ["지루함 못 참음", "깊이 부족", "관심 필요"],
+    bestMatch: "🦜 앵무새상",
+    funMatch: "🦥 나무늘보상",
+    celebrities: ["유재석", "전현무", "이효리"],
+    shortDesc: "똑똑하고 유쾌한 바다의 인싸",
+    tags: ["#인싸_of_인싸", "#유쾌함_폭발", "#사교왕"],
+  },
+  butterfly: {
+    id: "butterfly",
+    emoji: "🦋",
+    name: "나비상",
+    color: "#D946EF",
+    bgStart: "#FAE8FF",
+    bgEnd: "#FDF4FF",
+    personality: "자유롭고 아름다운 영혼의 소유자!\n한곳에 머무르지 않고\n새로운 세계를 탐험하며 살아가는 타입.\n변화를 두려워하지 않는 용기가 매력!",
+    loveStyle: "자유로운 영혼이라 구속을 싫어해요. 서로의 공간을 존중하는 연애를 원해요.",
+    strengths: ["자유로움", "적응력", "심미안", "변화를 즐김"],
+    weaknesses: ["변덕", "정착 어려움", "깊이 부족"],
+    bestMatch: "🐺 늑대상",
+    funMatch: "🐬 돌고래상",
+    celebrities: ["제니(블핑)", "GD", "설리"],
+    shortDesc: "자유롭고 아름다운 영혼의 탐험가",
+    tags: ["#자유영혼", "#변화를_즐기는", "#아름다운_존재"],
+  },
+  squirrel: {
+    id: "squirrel",
+    emoji: "🐿️",
+    name: "다람쥐상",
+    color: "#D97706",
+    bgStart: "#FEF3C7",
+    bgEnd: "#FFFBEB",
+    personality: "부지런하고 알뜰한 준비왕!\n항상 미래를 대비하고 계획하는\n철저한 성격의 소유자.\n작지만 강한 에너지로 목표를 이뤄내요!",
+    loveStyle: "계획적이고 안정적인 연애를 추구. 기념일도 절대 안 잊어버려요.",
+    strengths: ["부지런함", "계획성", "알뜰함", "실행력"],
+    weaknesses: ["걱정 많음", "소심함", "욕심"],
+    bestMatch: "🐻 곰상",
+    funMatch: "🦕 공룡상",
+    celebrities: ["아이유", "정해인", "박보영"],
+    shortDesc: "부지런하고 알뜰한 완벽 준비왕",
+    tags: ["#부지런함_MAX", "#알뜰살뜰", "#준비왕"],
+  },
+  sloth: {
+    id: "sloth",
+    emoji: "🦥",
+    name: "나무늘보상",
+    color: "#65A30D",
+    bgStart: "#ECFCCB",
+    bgEnd: "#F7FEE7",
+    personality: "여유롭고 평화로운 힐링 존재!\n느긋하게 자기만의 속도로 살아가는\n마이페이스 타입.\n함께 있으면 마음이 편해지는 사람!",
+    loveStyle: "느긋하고 편안한 연애. 서로 아무것도 안 해도 행복한 관계가 이상적.",
+    strengths: ["여유로움", "평화로움", "스트레스 관리", "경청"],
+    weaknesses: ["게으름", "결단력 부족", "느림"],
+    bestMatch: "🐼 판다상",
+    funMatch: "🐬 돌고래상",
+    celebrities: ["공유", "카리나", "변우석"],
+    shortDesc: "여유롭고 평화로운 힐링 인간",
+    tags: ["#여유만만", "#마이페이스", "#힐링_존재"],
+  },
+  panda: {
+    id: "panda",
+    emoji: "🐼",
+    name: "판다상",
+    color: "#374151",
+    bgStart: "#F3F4F6",
+    bgEnd: "#F9FAFB",
+    personality: "귀엽고 느긋한 먹보 매력의 소유자!\n먹는 걸 사랑하고 느긋하지만\n의외로 고집이 세고 자기 주관이 뚜렷해요.\n보기와 다른 반전 매력이 포인트!",
+    loveStyle: "함께 맛있는 거 먹으면서 소소한 행복을 나누는 연애가 최고!",
+    strengths: ["귀여움", "여유", "자기 주관", "반전 매력"],
+    weaknesses: ["게으름", "고집", "무관심"],
+    bestMatch: "🦥 나무늘보상",
+    funMatch: "🐹 햄스터상",
+    celebrities: ["송강", "안유진", "차은우"],
+    shortDesc: "귀엽고 느긋한 반전 매력 먹보",
+    tags: ["#먹보_매력", "#귀여운_반전", "#느긋함_끝판"],
+  },
+  parrot: {
+    id: "parrot",
+    emoji: "🦜",
+    name: "앵무새상",
+    color: "#0D9488",
+    bgStart: "#CCFBF1",
+    bgEnd: "#F0FDFA",
+    personality: "밝고 수다스러운 에너지 폭탄!\n이야기하는 걸 좋아하고\n표현력이 뛰어난 엔터테이너 타입.\n어디서든 존재감이 빛나는 사람!",
+    loveStyle: "대화가 중요! 말로 사랑을 표현하고 함께 이야기 나누는 걸 좋아해요.",
+    strengths: ["표현력", "사교성", "밝은 에너지", "재치"],
+    weaknesses: ["수다", "오지랖", "집중력 부족"],
+    bestMatch: "🐬 돌고래상",
+    funMatch: "🐱 고양이상",
+    celebrities: ["이영지", "유재석", "장원영"],
+    shortDesc: "밝고 수다스러운 인간 엔터테이너",
+    tags: ["#수다왕", "#에너지_폭탄", "#표현력_만점"],
+  },
 };
 
 /* ==================== Quiz Questions ==================== */
@@ -246,213 +348,138 @@ export interface QuizQuestion {
 
 export const quizQuestions: QuizQuestion[] = [
   {
-    question: "\uCE5C\uAD6C\uB4E4\uACFC \uBAA8\uC784\uC5D0\uC11C \uB098\uC758 \uD3EC\uC9C0\uC158\uC740?",
+    question: "친구들과 모임에서 나의 포지션은?",
     answers: [
-      {
-        text: "\uBD84\uC704\uAE30 \uBA54\uC774\uCEE4! \uB0B4\uAC00 \uC788\uC73C\uBA74 \uC2E0\uB09C\uB2E4 \uD83C\uDF89",
-        scores: { dog: 2, hamster: 1, dino: 1 },
-      },
-      {
-        text: "\uC870\uC6A9\uD788 \uAD00\uCC30\uD558\uB2E4 \uD575\uC2EC\uB9CC \uCF59 \uC9DA\uC5B4\uB0B4\uB294 \uD0C0\uC785 \uD83E\uDDD0",
-        scores: { owl: 2, cat: 1, wolf: 1 },
-      },
-      {
-        text: "\uBAA8\uB450\uB97C \uCC59\uAE30\uBA70 \uC798 \uB9DE\uCDB0\uC8FC\uB294 \uC911\uC7AC\uC790 \uD83E\uDD1D",
-        scores: { bear: 2, deer: 1, penguin: 1 },
-      },
-      {
-        text: "\uD544\uC694\uD560 \uB54C \uD655\uC2E4\uD558\uAC8C \uB9AC\uB4DC\uD558\uB294 \uB9AC\uB354 \uD83D\uDC51",
-        scores: { tiger: 2, wolf: 2 },
-      },
+      { text: "분위기 메이커! 내가 있으면 신난다 🎉", scores: { dog: 2, penguin: 1, fox: 1 } },
+      { text: "조용히 관찰하다 핵심만 콕 짚어내는 타입 🧐", scores: { owl: 2, dino: 1, wolf: 1 } },
+      { text: "모두를 챙기며 잘 맞춰주는 중재자 🤝", scores: { bear: 2, dolphin: 1, butterfly: 1 } },
+      { text: "필요할 때 확실하게 리드하는 리더 👑", scores: { tiger: 2, squirrel: 1, panda: 1 } },
     ],
   },
   {
-    question: "\uC8FC\uB9D0\uC5D0 \uAC00\uC7A5 \uD558\uACE0 \uC2F6\uC740 \uAC83\uC740?",
+    question: "주말에 가장 하고 싶은 것은?",
     answers: [
-      {
-        text: "\uCE5C\uAD6C\uB4E4\uC774\uB791 \uC2E0\uB098\uAC8C \uB180\uACE0 \uC2F6\uC5B4! \uD83C\uDF7B",
-        scores: { dog: 2, rabbit: 1, hamster: 1 },
-      },
-      {
-        text: "\uC9D1\uC5D0\uC11C \uD63C\uC790 \uC870\uC6A9\uD788 \uC26C\uACE0 \uC2F6\uC5B4 \uD83D\uDECB\uFE0F",
-        scores: { cat: 2, owl: 1, deer: 1 },
-      },
-      {
-        text: "\uC0C8\uB85C\uC6B4 \uACE0\uB3C4 \uD574\uBCF4\uACE0 \uC2F6\uC5B4! \uD83C\uDF1F",
-        scores: { fox: 2, tiger: 1, dino: 1 },
-      },
-      {
-        text: "\uB9DB\uC788\uB294 \uAC70 \uBA39\uC73C\uBA74\uC11C \uC0B0\uCC45\uD558\uACE0 \uC2F6\uC5B4 \uD83C\uDF3F",
-        scores: { bear: 1, penguin: 2, hamster: 1 },
-      },
+      { text: "친구들이랑 신나게 놀고 싶어! 🎉", scores: { dog: 2, penguin: 1, bear: 1 } },
+      { text: "집에서 혼자 조용히 쉬고 싶어 🛋️", scores: { cat: 2, owl: 1, parrot: 1 } },
+      { text: "새로운 곳도 해보고 싶어! 🌟", scores: { fox: 2, dino: 1, wolf: 1 } },
+      { text: "맛있는 거 먹으면서 산책하고 싶어 🌿", scores: { hamster: 2, dolphin: 1, butterfly: 1 } },
     ],
   },
   {
-    question: "\uD654\uAC00 \uB0AC\uC744 \uB54C \uB098\uC758 \uBC18\uC751\uC740?",
+    question: "화가 났을 때 나의 반응은?",
     answers: [
-      {
-        text: "\uBC14\uB85C \uD45C\uD604\uD55C\uB2E4! \uD654 \uCC38\uB294 \uAC74 \uBAA8\uD574 \uD83D\uDD25",
-        scores: { tiger: 2, dino: 1, hamster: 1 },
-      },
-      {
-        text: "\uB0B4\uC0C9\uD558\uC9C0 \uC54A\uC9C0\uB9CC \uC18D\uC73C\uB85C \uBD80\uAE00\uBD80\uAE00 \uD83D\uDE24",
-        scores: { cat: 2, deer: 1, owl: 1 },
-      },
-      {
-        text: "\uD55C\uBC1C \uBB3C\uB7EC\uC11C\uC11C \uC0C1\uD669 \uD310\uB2E8 \uD6C4 \uB300\uC751 \uD83E\uDDD0",
-        scores: { fox: 2, wolf: 1, owl: 1 },
-      },
-      {
-        text: "\uAE08\uBC29 \uD480\uB9BC\u2026 \uD654\uB97C \uC624\uB798 \uC720\uC9C0 \uBABB \uD568 \uD83D\uDE05",
-        scores: { rabbit: 2, penguin: 1, bear: 1 },
-      },
+      { text: "바로 표현한다! 화 참는 건 모해 🔥", scores: { tiger: 2, penguin: 1, bear: 1 } },
+      { text: "내색하지 않지만 속으로 부글부글 😤", scores: { cat: 2, owl: 1, squirrel: 1 } },
+      { text: "한발 물러서서 상황 판단 후 대응 🧐", scores: { fox: 2, panda: 1, parrot: 1 } },
+      { text: "금방 풀림… 화를 오래 유지 못 함 😅", scores: { rabbit: 2, dog: 1, deer: 1 } },
     ],
   },
   {
-    question: "\uCCAB\uC778\uC0C1 vs \uC2E4\uC81C \uB098\uB294?",
+    question: "첫인상 vs 실제 나는?",
     answers: [
-      {
-        text: "\uCC28\uAC00\uC6CC \uBCF4\uC774\uC9C0\uB9CC \uC54C\uBA74 \uB530\uB73B\uD574 \uD83E\uDDE3\u2192\u2764\uFE0F",
-        scores: { cat: 2, wolf: 2, deer: 1 },
-      },
-      {
-        text: "\uAC70\uC758 \uAC19\uC74C! \uC18D\uACFC \uAC89\uC774 \uB610\uAC19\uC544 \uD83D\uDE04",
-        scores: { dog: 2, bear: 1, hamster: 1 },
-      },
-      {
-        text: "\uC870\uC6A9\uD574 \uBCF4\uC774\uC9C0\uB9CC \uCE5C\uD574\uC9C0\uBA74 \uBBF8\uCE5C \uD150\uC158 \uD83D\uDD25",
-        scores: { penguin: 2, rabbit: 1, dino: 1 },
-      },
-      {
-        text: "\uBC1D\uC544 \uBCF4\uC774\uC9C0\uB9CC \uC758\uC678\uB85C \uC0DD\uAC01\uC774 \uAE4A\uC74C \uD83C\uDF19",
-        scores: { fox: 1, owl: 2, tiger: 1 },
-      },
+      { text: "차가워 보이지만 알면 따뜻해 🧣→❤️", scores: { wolf: 2, fox: 1, cat: 1 } },
+      { text: "거의 같음! 속과 겉이 똑같아 😄", scores: { dog: 2, bear: 1, rabbit: 1 } },
+      { text: "조용해 보이지만 친해지면 미친 텐션 🔥", scores: { penguin: 2, dino: 1, hamster: 1 } },
+      { text: "밝아 보이지만 의외로 생각이 깊음 🌙", scores: { owl: 2, tiger: 1, dolphin: 1 } },
     ],
   },
   {
-    question: "\uC5F0\uC560\uD560 \uB54C \uB098\uC758 \uC2A4\uD0C0\uC77C\uC740?",
+    question: "연애할 때 나의 스타일은?",
     answers: [
-      {
-        text: "\uC560\uAD50 \uD3ED\uBC1C! \uC88B\uC544\uD558\uBA74 \uC628 \uBAB8\uC73C\uB85C \uD45C\uD604 \uD49C",
-        scores: { dog: 2, rabbit: 1, dino: 1 },
-      },
-      {
-        text: "\uCE20\uB370\uB808\u2026 \uC88B\uC544\uD558\uB294\uB370 \uD45C\uD604 \uBABB \uD568 \uD83D\uDE33",
-        scores: { cat: 2, wolf: 1, deer: 1 },
-      },
-      {
-        text: "\uBC00\uB2F9\uC758 \uACE0\uC218! \uC804\uB7B5\uC801\uC73C\uB85C \uC5B4\uD544 \uD83C\uDFAF",
-        scores: { fox: 2, tiger: 1 },
-      },
-      {
-        text: "\uC9C4\uC9C0\uD558\uACE0 \uB4E0\uB4E0\uD558\uAC8C \uC624\uB798 \uAC00\uB294 \uC5F0\uC560 \uD83E\uDD70",
-        scores: { bear: 2, penguin: 1, owl: 1 },
-      },
+      { text: "애교 폭발! 좋아하면 온 몸으로 표현 💕", scores: { rabbit: 2, penguin: 1, wolf: 1 } },
+      { text: "쿨데레… 좋아하는데 표현 못 함 😳", scores: { deer: 2, owl: 1, butterfly: 1 } },
+      { text: "밀당의 고수! 전략적으로 어필 🎯", scores: { fox: 2, squirrel: 1, sloth: 1 } },
+      { text: "진지하고 든든하게 오래 가는 연애 🥰", scores: { bear: 2, panda: 1, parrot: 1 } },
     ],
   },
   {
-    question: "\uB0B4 \uBC29\uC758 \uBD84\uC704\uAE30\uB97C \uB9D0\uD55C\uB2E4\uBA74?",
+    question: "내 방의 분위기를 말한다면?",
     answers: [
-      {
-        text: "\uCF54\uC9C0\uD558\uACE0 \uC544\uAE30\uC790\uAE30\uD55C \uC0AC\uB791\uC2A4\uB7EC\uC6B4 \uBC29 \uD83E\uDDF8",
-        scores: { rabbit: 2, hamster: 1, dog: 1 },
-      },
-      {
-        text: "\uBBF8\uB2C8\uBA40\uD558\uACE0 \uC815\uB3C8\uB41C \uAE54\uB054\uD55C \uBC29 \uD83E\uDDF9",
-        scores: { cat: 1, deer: 2, owl: 1 },
-      },
-      {
-        text: "\uCDE8\uD5A5\uC744 \uBC18\uC601\uD55C \uB3C5\uD2B9\uD55C \uC778\uD14C\uB9AC\uC5B4 \uD83C\uDFA8",
-        scores: { fox: 1, dino: 2, tiger: 1 },
-      },
-      {
-        text: "\uD3B8\uC548\uD568\uC774 \uCD5C\uACE0! \uD3EC\uADFC\uD55C \uC2EC\uD50C \uBC29 \uD83D\uDECB\uFE0F",
-        scores: { bear: 2, penguin: 1, wolf: 1 },
-      },
+      { text: "코지하고 아기자기한 사랑스러운 방 🧸", scores: { rabbit: 2, fox: 1, penguin: 1 } },
+      { text: "미니멀하고 정돈된 깔끔한 방 🧹", scores: { deer: 2, dog: 1, cat: 1 } },
+      { text: "취향을 반영한 독특한 인테리어 🎨", scores: { dino: 2, wolf: 1, owl: 1 } },
+      { text: "편안함이 최고! 포근한 심플 방 🛋️", scores: { bear: 2, hamster: 1, tiger: 1 } },
     ],
   },
   {
-    question: "SNS\uC5D0\uC11C \uB098\uC758 \uD65C\uB3D9 \uC2A4\uD0C0\uC77C\uC740?",
+    question: "SNS에서 나의 활동 스타일은?",
     answers: [
-      {
-        text: "\uC77C\uC0C1 \uACF5\uC720 + \uC2A4\uD1A0\uB9AC \uD3ED\uBC29! \uC18C\uD1B5\uC774 \uC911\uC694 \uD83D\uDCF1",
-        scores: { dog: 2, rabbit: 1, hamster: 1 },
-      },
-      {
-        text: "\uAC10\uC131 \uD53C\uB4DC \uD050\uB808\uC774\uC158 \uC7A5\uC778 \uD83D\uDCF8",
-        scores: { deer: 2, fox: 1, cat: 1 },
-      },
-      {
-        text: "\uC7A0\uC218 \uD0C0\uB2E4 \uAC00\uB054 \uBC24\uC5D0 \uB4F1\uC7A5 \uD83C\uDF19",
-        scores: { owl: 2, wolf: 1, cat: 1 },
-      },
-      {
-        text: "\uBC08\u00B7\uB4DC\uB9BD \uC800\uC7A5\uC18C, \uC6C3\uAE30\uB294 \uAC8C \uC81C\uC77C \uC88B\uC544 \uD83E\uDD23",
-        scores: { penguin: 2, dino: 1, bear: 1 },
-      },
+      { text: "일상 공유 + 스토리 폭방! 소통이 중요 📱", scores: { dolphin: 2, fox: 1, bear: 1 } },
+      { text: "감성 피드 큐레이션 장인 📸", scores: { deer: 2, rabbit: 1, dino: 1 } },
+      { text: "잠수 타다 가끔 밤에 등장 🌙", scores: { owl: 2, butterfly: 1, squirrel: 1 } },
+      { text: "밈·드립 저장소, 웃기는 게 제일 좋아 🤣", scores: { penguin: 2, sloth: 1, panda: 1 } },
     ],
   },
   {
-    question: "\uC5EC\uD589 \uAC04\uB2E4\uBA74 \uB098\uC758 \uC2A4\uD0C0\uC77C\uC740?",
+    question: "여행 간다면 나의 스타일은?",
     answers: [
-      {
-        text: "\uCCA0\uC800\uD55C \uACC4\uD68D + \uC644\uBCBD\uD55C \uB3D9\uC120 \uD83D\uDCCB",
-        scores: { owl: 2, tiger: 1, wolf: 1 },
-      },
-      {
-        text: "\uC989\uD765\uC73C\uB85C! \uBC1C\uAE38 \uB2FF\uB294 \uB300\uB85C \uD83C\uDF0A",
-        scores: { fox: 1, dino: 2, dog: 1 },
-      },
-      {
-        text: "\uB9DB\uC9D1 \uD22C\uC5B4\uAC00 \uC81C\uC77C \uC911\uC694! \uBA39\uBC29 \uC5EC\uD589 \uD83C\uDF5C",
-        scores: { hamster: 2, bear: 1, penguin: 1 },
-      },
-      {
-        text: "\uC5EC\uC720\uB86D\uAC8C \uBD84\uC704\uAE30 \uC88B\uC740 \uACF3\uC5D0\uC11C \uD798\uB9C1 \uD83C\uDF3F",
-        scores: { deer: 2, rabbit: 1, cat: 1 },
-      },
+      { text: "철저한 계획 + 완벽한 동선 📋", scores: { squirrel: 2, deer: 1, penguin: 1 } },
+      { text: "즉흥으로! 발길 닿는 대로 🌊", scores: { dino: 2, dolphin: 1, parrot: 1 } },
+      { text: "맛집 투어가 제일 중요! 먹방 여행 🍜", scores: { hamster: 2, dog: 1, cat: 1 } },
+      { text: "여유롭게 분위기 좋은 곳에서 힐링 🌿", scores: { sloth: 2, fox: 1, bear: 1 } },
     ],
   },
   {
-    question: "\uC2A4\uD2B8\uB808\uC2A4 \uBC1B\uC744 \uB54C \uB098\uB9CC\uC758 \uD574\uC18C\uBC95\uC740?",
+    question: "스트레스 받을 때 나만의 해소법은?",
     answers: [
-      {
-        text: "\uC6B4\uB3D9\uC774\uB098 \uC0B0\uCC45\uC73C\uB85C \uBAB8\uC744 \uC6C0\uC9C1\uC774\uAE30 \uD83C\uDFC3",
-        scores: { wolf: 2, tiger: 1, dino: 1 },
-      },
-      {
-        text: "\uB9DB\uC788\uB294 \uAC70 \uBA39\uC73C\uBA74\uC11C \uBB58\uD558\uAC8C \uBCF4\uAE30 \uD83C\uDF70",
-        scores: { hamster: 2, bear: 1, rabbit: 1 },
-      },
-      {
-        text: "\uD63C\uC790 \uC870\uC6A9\uD788 \uC0DD\uAC01 \uC815\uB9AC\uD558\uAE30 \uD83E\uDDD8",
-        scores: { owl: 2, cat: 1, deer: 1 },
-      },
-      {
-        text: "\uCE5C\uAD6C\uD55C\uD14C \uC804\uD654\uD574\uC11C \uC218\uB2E4 \uD3ED\uBC1C \uD83D\uDCDE",
-        scores: { dog: 1, penguin: 1, fox: 2 },
-      },
+      { text: "운동이나 산책으로 몸을 움직이기 🏃", scores: { wolf: 2, rabbit: 1, deer: 1 } },
+      { text: "맛있는 거 먹으면서 뭔하게 보기 🍰", scores: { hamster: 2, dino: 1, penguin: 1 } },
+      { text: "혼자 조용히 생각 정리하기 🧘", scores: { cat: 2, owl: 1, tiger: 1 } },
+      { text: "친구한테 전화해서 수다 폭발 📞", scores: { parrot: 2, dolphin: 1, butterfly: 1 } },
     ],
   },
   {
-    question: "\uB0B4 \uC778\uC0DD \uBAA8\uD1A0\uC640 \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uAC83\uC740?",
+    question: "내 인생 모토와 가장 가까운 것은?",
     answers: [
-      {
-        text: '"\uC778\uC0DD\uC740 \uC990\uAE30\uB294 \uAC70\uC57C! \uC624\uB298\uC744 \uC990\uAE30\uC790" \uD83C\uDF88',
-        scores: { dog: 2, hamster: 1, dino: 1 },
-      },
-      {
-        text: '"\uD558\uB294 \uB9CC\uD07C \uB41C\uB2E4. \uBAA9\uD45C\uB97C \uD5A5\uD574 \uB2EC\uB824\uAC00\uC790" \uD83D\uDE80',
-        scores: { tiger: 2, wolf: 2 },
-      },
-      {
-        text: '"\uB098\uB2F5\uAC8C \uC0B4\uC790. \uB0A8 \uB208\uCE58 \uBCF4\uC9C0 \uB9D0\uACE0" \uD83C\uDF1F',
-        scores: { cat: 2, dino: 1, fox: 1 },
-      },
-      {
-        text: '"\uC0AC\uB78C\uC774 \uC81C\uC77C \uC911\uC694\uD574. \uAD00\uACC4\uB97C \uC18C\uC911\uD788" \uD83E\uDD0D',
-        scores: { bear: 2, penguin: 1, rabbit: 1 },
-      },
+      { text: "\"인생은 즐기는 거야! 오늘을 즐기자\" 🎈", scores: { dog: 2, wolf: 1, hamster: 1 } },
+      { text: "\"하는 만큼 된다. 목표를 향해 달려가자\" 🚀", scores: { tiger: 2, squirrel: 1, sloth: 1 } },
+      { text: "\"나답게 살자. 남 눈치 보지 말고\" 🌟", scores: { butterfly: 2, parrot: 1, cat: 1 } },
+      { text: "\"사람이 제일 중요해. 관계를 소중히\" 🤍", scores: { panda: 2, fox: 1, bear: 1 } },
+    ],
+  },
+  {
+    question: "친구가 고민을 이야기할 때 나의 반응은?",
+    answers: [
+      { text: "같이 울면서 공감해주는 타입 😢", scores: { rabbit: 2, dog: 1, deer: 1 } },
+      { text: "바로 해결책을 제시해줌! 💡", scores: { tiger: 2, dino: 1, wolf: 1 } },
+      { text: "맛있는 거 사주면서 기분 전환시켜줌 🍰", scores: { panda: 2, penguin: 1, owl: 1 } },
+      { text: "조용히 옆에서 끝까지 들어주는 편 🤗", scores: { sloth: 2, hamster: 1, dolphin: 1 } },
+    ],
+  },
+  {
+    question: "나의 아침 루틴은?",
+    answers: [
+      { text: "알람 끄고 이불 속에서 뒹굴뒹굴 🛏️", scores: { sloth: 2, panda: 1, rabbit: 1 } },
+      { text: "일어나자마자 계획대로 척척 ⏰", scores: { squirrel: 2, tiger: 1, butterfly: 1 } },
+      { text: "음악 틀고 신나게 준비! 🎵", scores: { parrot: 2, dog: 1, cat: 1 } },
+      { text: "일단 밥부터… 먹어야 힘이 나지 🍚", scores: { hamster: 2, fox: 1, bear: 1 } },
+    ],
+  },
+  {
+    question: "좋아하는 사람 앞에서 나는?",
+    answers: [
+      { text: "자꾸 쳐다보다 눈 마주치면 도망 👀", scores: { deer: 2, sloth: 1, panda: 1 } },
+      { text: "자연스럽게 옆에 가서 말 걸기 😊", scores: { dolphin: 2, parrot: 1, rabbit: 1 } },
+      { text: "모른 척하면서 은근히 신경 쓰기 😏", scores: { wolf: 2, dino: 1, penguin: 1 } },
+      { text: "선물이나 음식으로 마음을 표현 🎁", scores: { squirrel: 2, owl: 1, hamster: 1 } },
+    ],
+  },
+  {
+    question: "단체 사진 찍을 때 나의 포지션은?",
+    answers: [
+      { text: "맨 앞에서 브이! 센터 좋아 ✌️", scores: { parrot: 2, squirrel: 1, deer: 1 } },
+      { text: "구석에서 조용히 미소 짓기 🙂", scores: { cat: 2, wolf: 1, tiger: 1 } },
+      { text: "장난치면서 웃긴 표정 짓기 🤪", scores: { dino: 2, dolphin: 1, sloth: 1 } },
+      { text: "자연스럽게 포즈 잡는 스타일 💫", scores: { butterfly: 2, panda: 1, dog: 1 } },
+    ],
+  },
+  {
+    question: "갑자기 내일 휴가라면?",
+    answers: [
+      { text: "친구들한테 바로 연락! 같이 놀자 📱", scores: { dolphin: 2, squirrel: 1, parrot: 1 } },
+      { text: "카페에서 혼자 책 읽으며 힐링 ☕", scores: { sloth: 2, cat: 1, fox: 1 } },
+      { text: "먹고 싶었던 거 다 먹으러 가기 🍕", scores: { panda: 2, bear: 1, rabbit: 1 } },
+      { text: "급 여행! 어디든 떠나자 ✈️", scores: { butterfly: 2, deer: 1, dino: 1 } },
     ],
   },
 ];

@@ -45,7 +45,7 @@ const OTHER_TESTS = [
 
 /* ==================== Floating Emojis ==================== */
 function FloatingEmojis() {
-  const emojis = ["\uD83D\uDC36", "\uD83D\uDC31", "\uD83E\uDD8A", "\uD83D\uDC3B", "\uD83D\uDC30", "\uD83E\uDD8C", "\uD83E\uDD95", "\uD83D\uDC3A"];
+  const emojis = ["\uD83D\uDC36", "\uD83D\uDC31", "\uD83E\uDD8A", "\uD83D\uDC3B", "\uD83D\uDC30", "\uD83E\uDD8C", "\uD83E\uDD95", "\uD83D\uDC3A", "\uD83D\uDC27", "\uD83E\uDD89", "\uD83D\uDC39", "\uD83D\uDC2F", "\uD83D\uDC2C", "\uD83E\uDD8B", "\uD83D\uDC3F\uFE0F", "\uD83E\uDDA5", "\uD83D\uDC3C", "\uD83E\uDD9C"];
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {emojis.map((emoji, i) => (
@@ -424,22 +424,10 @@ export default function AnimalFaceEngine() {
               \uB098\uC758 \uB2EE\uC740 \uB3D9\uBB3C\uC0C1\uC740?
             </p>
 
-            <div className="flex flex-wrap justify-center gap-1.5 mb-6 px-1">
-              {Object.values(animalTypes).map((a, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1 bg-white/70 backdrop-blur-sm px-2.5 py-1 rounded-full text-[13px] shadow-sm animate-scale-in"
-                  style={{ animationDelay: `${i * 0.06}s` }}
-                >
-                  {a.emoji} {a.name}
-                </span>
-              ))}
-            </div>
-
             <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-gray-500 mb-6 shadow-sm">
               <span>\uD83D\uDCF8 \uC0AC\uC9C4 \uBD84\uC11D</span>
               <span className="w-1 h-1 bg-gray-300 rounded-full" />
-              <span>\uD83D\uDCDD \uD034\uC988 10\uBB38\uD56D</span>
+              <span>\uD83D\uDCDD \uD034\uC988 15\uBB38\uD56D</span>
             </div>
           </div>
 
