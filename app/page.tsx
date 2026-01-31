@@ -16,8 +16,8 @@ const tests = [
   {
     id: "animal-face",
     emoji: "🐾",
-    title: "AI 닮은 동물상 분석기",
-    subtitle: "AI가 분석하는 내 동물상!",
+    title: "AI 동물상 테스트",
+    subtitle: "사진 한 장으로 내 동물상 찾기!",
     available: true,
     gradient: "from-violet-500 via-purple-500 to-indigo-500",
   },

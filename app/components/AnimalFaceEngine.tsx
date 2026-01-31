@@ -337,7 +337,7 @@ export default function AnimalFaceEngine() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "AI 닮은 동물상 분석기",
+          title: "AI 동물상 테스트",
           text: getShareText(),
           url: shareUrl,
         });
@@ -407,11 +407,11 @@ export default function AnimalFaceEngine() {
               className="text-[2.5rem] leading-tight mb-3"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              AI 닮은
+              내 얼굴은
               <br />
               <span className="relative inline-block mt-1">
                 <span className="relative z-10 bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                  동물상 분석기
+                  무슨 동물상?
                 </span>
                 <span className="absolute -bottom-1 left-0 right-0 h-3 bg-purple-200/60 -rotate-1 rounded" />
               </span>
@@ -426,7 +426,7 @@ export default function AnimalFaceEngine() {
               <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.1s" }}>
                 <div className="text-2xl mb-1">🤖</div>
                 <p className="text-[11px] font-bold text-gray-700">AI 얼굴 분석</p>
-                <p className="text-[10px] text-gray-400">사진 or 퀴즈</p>
+                <p className="text-[10px] text-gray-400">사진 한 장으로</p>
               </div>
               <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.2s" }}>
                 <div className="text-2xl mb-1">🎯</div>
@@ -458,14 +458,6 @@ export default function AnimalFaceEngine() {
             style={{ fontFamily: "var(--font-display)" }}
           >
             📸 사진으로 분석하기
-          </button>
-
-          <button
-            onClick={handleQuizMode}
-            className="quiz-btn w-full max-w-xs py-4 px-8 bg-white/80 backdrop-blur-sm text-purple-600 text-lg font-bold rounded-2xl shadow-md border-2 border-purple-200 hover:border-purple-400 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            📝 퀴즈로 분석하기
           </button>
 
           <p className="text-xs text-gray-400 mt-3 mb-6 pb-safe">
@@ -557,14 +549,6 @@ export default function AnimalFaceEngine() {
             </div>
           )}
 
-          <div className="mt-6 text-center">
-            <button
-              onClick={handleQuizMode}
-              className="text-sm text-purple-400 hover:text-purple-600 transition-colors underline"
-            >
-              퀴즈로 분석하고 싶다면?
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -761,7 +745,7 @@ export default function AnimalFaceEngine() {
                 나도 테스트하기 → pickmetype.vercel.app
               </div>
               <p style={{ fontSize: 11, color: "#bbb" }}>
-                AI 닮은 동물상 분석기
+                AI 동물상 테스트
               </p>
             </div>
           </div>
