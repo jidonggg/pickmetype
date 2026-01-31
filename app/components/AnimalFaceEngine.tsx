@@ -84,6 +84,11 @@ export default function AnimalFaceEngine() {
   const shareCardRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<"photo" | "quiz" | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [panPos, setPanPos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef({ startX: 0, startY: 0, startPanX: 0, startPanY: 0 });
+  const imgContainerRef = useRef<HTMLDivElement>(null);
 
   const initKakao = () => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
@@ -162,9 +167,101 @@ export default function AnimalFaceEngine() {
     try {
       const resized = await resizeImage(file);
       setUploadPreview(resized);
+      setZoom(1);
+      setPanPos({ x: 0, y: 0 });
     } catch {
       setUploadError("이미지 처리에 실패했어요.");
     }
+  };
+
+  /* ---------- zoom/pan handlers ---------- */
+  const getMaxPan = (z: number) => {
+    const maxPx = ((z - 1) / (2 * z)) * (imgContainerRef.current?.offsetWidth || 300);
+    return maxPx;
+  };
+
+  const clampPan = (x: number, y: number, z: number) => {
+    const max = getMaxPan(z);
+    return {
+      x: Math.max(-max, Math.min(max, x)),
+      y: Math.max(-max, Math.min(max, y)),
+    };
+  };
+
+  const handlePanStart = (clientX: number, clientY: number) => {
+    if (zoom <= 1) return;
+    setIsDragging(true);
+    dragRef.current = { startX: clientX, startY: clientY, startPanX: panPos.x, startPanY: panPos.y };
+  };
+
+  const handlePanMove = (clientX: number, clientY: number) => {
+    if (!isDragging) return;
+    const dx = clientX - dragRef.current.startX;
+    const dy = clientY - dragRef.current.startY;
+    setPanPos(clampPan(dragRef.current.startPanX + dx, dragRef.current.startPanY + dy, zoom));
+  };
+
+  const handlePanEnd = () => setIsDragging(false);
+
+  const handleZoomChange = (newZoom: number) => {
+    const z = Math.max(1, Math.min(3, newZoom));
+    setZoom(z);
+    setPanPos(clampPan(panPos.x, panPos.y, z));
+  };
+
+  /* ---------- crop visible area ---------- */
+  const getCroppedImage = (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      if (!uploadPreview) return reject("No image");
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const outSize = 800;
+        canvas.width = outSize;
+        canvas.height = outSize;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject("Canvas error");
+
+        const iw = img.width;
+        const ih = img.height;
+        const containerSize = imgContainerRef.current?.offsetWidth || 300;
+
+        // object-cover scale
+        const coverScale = Math.max(containerSize / iw, containerSize / ih);
+        const dispW = iw * coverScale;
+        const dispH = ih * coverScale;
+
+        // Visible center offset (in display coords)
+        const cx = containerSize / 2 - panPos.x;
+        const cy = containerSize / 2 - panPos.y;
+
+        // Convert to pre-zoom display coords
+        const srcCx = cx / zoom;
+        const srcCy = cy / zoom;
+
+        // Visible size in display coords (pre-zoom)
+        const visW = containerSize / zoom;
+        const visH = containerSize / zoom;
+
+        // Convert to original image coords
+        const offsetX = (dispW - containerSize) / 2;
+        const offsetY = (dispH - containerSize) / 2;
+
+        const imgSrcX = (srcCx - visW / 2 + offsetX) / coverScale;
+        const imgSrcY = (srcCy - visH / 2 + offsetY) / coverScale;
+        const imgSrcW = visW / coverScale;
+        const imgSrcH = visH / coverScale;
+
+        ctx.drawImage(img,
+          Math.max(0, imgSrcX), Math.max(0, imgSrcY),
+          Math.min(iw, imgSrcW), Math.min(ih, imgSrcH),
+          0, 0, outSize, outSize
+        );
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.onerror = reject;
+      img.src = uploadPreview;
+    });
   };
 
   const handleAnalyzePhoto = async () => {
@@ -182,10 +279,11 @@ export default function AnimalFaceEngine() {
     }, 1500);
 
     try {
+      const imageToSend = zoom > 1 ? await getCroppedImage() : uploadPreview;
       const res = await fetch("/api/analyze-animal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: uploadPreview }),
+        body: JSON.stringify({ image: imageToSend }),
       });
 
       clearInterval(stepInterval);
@@ -279,6 +377,8 @@ export default function AnimalFaceEngine() {
     setUploadPreview(null);
     setUploadError(null);
     setMode(null);
+    setZoom(1);
+    setPanPos({ x: 0, y: 0 });
     window.scrollTo({ top: 0 });
   };
 
@@ -492,31 +592,79 @@ export default function AnimalFaceEngine() {
           </p>
 
           {/* Upload Area */}
-          <div
-            className="w-full aspect-square max-w-sm mx-auto rounded-3xl border-2 border-dashed border-purple-300 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 hover:bg-white/80 transition-all overflow-hidden"
-            onClick={() => fileInputRef.current?.click()}
-            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const file = e.dataTransfer.files[0];
-              if (file) handleFileSelect(file);
-            }}
-          >
-            {uploadPreview ? (
-              <img
-                src={uploadPreview}
-                alt="Preview"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <>
-                <div className="text-6xl mb-4">📷</div>
-                <p className="text-gray-500 font-medium mb-1">사진을 업로드하세요</p>
-                <p className="text-gray-400 text-sm">클릭 또는 드래그 앵 드롭</p>
-              </>
-            )}
-          </div>
+          {uploadPreview ? (
+            <>
+              <div
+                ref={imgContainerRef}
+                className="w-full aspect-square max-w-sm mx-auto rounded-3xl border-2 border-purple-300 bg-black/5 overflow-hidden select-none"
+                style={{ touchAction: "none", cursor: zoom > 1 ? (isDragging ? "grabbing" : "grab") : "default" }}
+                onMouseDown={(e) => { e.preventDefault(); handlePanStart(e.clientX, e.clientY); }}
+                onMouseMove={(e) => handlePanMove(e.clientX, e.clientY)}
+                onMouseUp={handlePanEnd}
+                onMouseLeave={handlePanEnd}
+                onTouchStart={(e) => { if (e.touches.length === 1) handlePanStart(e.touches[0].clientX, e.touches[0].clientY); }}
+                onTouchMove={(e) => { if (e.touches.length === 1) handlePanMove(e.touches[0].clientX, e.touches[0].clientY); }}
+                onTouchEnd={handlePanEnd}
+              >
+                <img
+                  src={uploadPreview}
+                  alt="Preview"
+                  className="w-full h-full object-cover pointer-events-none"
+                  style={{
+                    transform: `scale(${zoom}) translate(${panPos.x / zoom}px, ${panPos.y / zoom}px)`,
+                    transformOrigin: "center center",
+                    transition: isDragging ? "none" : "transform 0.15s ease-out",
+                  }}
+                  draggable={false}
+                />
+              </div>
+
+              {/* Zoom Controls */}
+              <div className="w-full max-w-sm mx-auto mt-3 flex items-center gap-3 px-2">
+                <button
+                  onClick={() => handleZoomChange(zoom - 0.25)}
+                  className="w-9 h-9 flex items-center justify-center bg-white/80 rounded-full shadow-sm border border-purple-200 text-purple-600 font-bold text-lg hover:bg-purple-50 transition-colors"
+                >
+                  −
+                </button>
+                <input
+                  type="range"
+                  min="1"
+                  max="3"
+                  step="0.05"
+                  value={zoom}
+                  onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
+                  className="flex-1 h-2 bg-purple-100 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer"
+                />
+                <button
+                  onClick={() => handleZoomChange(zoom + 0.25)}
+                  className="w-9 h-9 flex items-center justify-center bg-white/80 rounded-full shadow-sm border border-purple-200 text-purple-600 font-bold text-lg hover:bg-purple-50 transition-colors"
+                >
+                  +
+                </button>
+                <span className="text-xs text-gray-400 w-10 text-right">{Math.round(zoom * 100)}%</span>
+              </div>
+              {zoom > 1 && (
+                <p className="text-xs text-purple-400 text-center mt-1">드래그하여 위치를 조절하세요</p>
+              )}
+            </>
+          ) : (
+            <div
+              className="w-full aspect-square max-w-sm mx-auto rounded-3xl border-2 border-dashed border-purple-300 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 hover:bg-white/80 transition-all overflow-hidden"
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const file = e.dataTransfer.files[0];
+                if (file) handleFileSelect(file);
+              }}
+            >
+              <div className="text-6xl mb-4">📷</div>
+              <p className="text-gray-500 font-medium mb-1">사진을 업로드하세요</p>
+              <p className="text-gray-400 text-sm">클릭 또는 드래그 앤 드롭</p>
+            </div>
+          )}
           <input
             ref={fileInputRef}
             type="file"
@@ -535,7 +683,7 @@ export default function AnimalFaceEngine() {
           {uploadPreview && (
             <div className="flex gap-3 mt-4">
               <button
-                onClick={() => { setUploadPreview(null); fileInputRef.current?.click(); }}
+                onClick={() => { setUploadPreview(null); setZoom(1); setPanPos({ x: 0, y: 0 }); fileInputRef.current?.click(); }}
                 className="flex-1 py-3 bg-white/80 text-purple-600 font-bold rounded-2xl border-2 border-purple-200 hover:border-purple-400 transition-all text-sm"
               >
                 다시 선택
