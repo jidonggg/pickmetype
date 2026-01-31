@@ -25,8 +25,8 @@ const tests = [
     id: "dubai-cookie",
     emoji: "🍪",
     title: "나는 어떤 두쫀쿠?",
-    subtitle: "두바이 쫀득 쿠키 성격 테스트",
-    available: true,
+    subtitle: "리뉴얼 준비 중",
+    available: false,
     gradient: "from-amber-500 via-orange-500 to-red-400",
   },
   {

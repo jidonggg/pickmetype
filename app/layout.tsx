@@ -4,6 +4,7 @@ import Script from "next/script";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import GoogleAnalyticsPageView from "./components/GoogleAnalytics";
+import AdminButton from "./components/AdminButton";
 import "./globals.css";
 
 const displayFont = Black_Han_Sans({
@@ -71,6 +72,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <AdminButton />
       </body>
     </html>
   );
