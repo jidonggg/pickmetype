@@ -184,67 +184,12 @@ export default function MarketCapEngine() {
     typeof window !== "undefined" ? window.location.href.split("?")[0] : "";
 
   const getShareText = () =>
-    `📊 ${displayName} 분석 리포트\n💰 시가총액: ${result.marketCap.display}\n${result.grade.emoji} ${result.grade.grade} | ${result.grade.opinion}\n📋 신용등급: ${result.creditGrade}\n\n내 시가총액 ${result.marketCap.display}이래ㅋㅋ 너는?`;
+    `📊 ${displayName} 분석 리포트\n💰 시가총액: ${result.marketCap.display}\n${result.grade.emoji} ${result.grade.grade} | ${result.grade.opinion}\n📋 신용등급: ${result.creditGrade}\n\n내 시가총액 ${result.marketCap.display}이래ㅋㅋ 너는? → pickmetype.vercel.app/market-cap`;
 
-  const shareToKakao = () => {
-    gtagEvent("share", { method: "kakao", quiz_id: "market-cap" });
-    initKakao();
-    try {
-      if (window.Kakao && window.Kakao.isInitialized()) {
-        window.Kakao.Share.sendDefault({
-          objectType: "text",
-          text: `📊 ${displayName} 분석 리포트\n💰 시가총액: ${result.marketCap.display}\n${result.grade.emoji} ${result.grade.grade}`,
-          link: {
-            mobileWebUrl: "https://pickmetype.vercel.app",
-            webUrl: "https://pickmetype.vercel.app",
-          },
-          buttonTitle: "나도 측정하기",
-        });
-      } else {
-        shareNative();
-      }
-    } catch (e) {
-      alert("카카오 공유 오류: " + JSON.stringify(e));
-      shareNative();
-    }
-  };
-
-  const shareToX = () => {
-    gtagEvent("share", { method: "x", quiz_id: "market-cap" });
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText())}&url=${encodeURIComponent(shareUrl)}`;
-    window.open(url, "_blank", "width=600,height=400");
-  };
-
-  const copyLink = async () => {
-    gtagEvent("share", { method: "copy_link", quiz_id: "market-cap" });
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      toast("링크가 복사되었어요!");
-    } catch {
-      toast("링크 복사에 실패했어요");
-    }
-  };
-
-  const shareNative = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "나의 시가총액 측정기",
-          text: getShareText(),
-          url: shareUrl,
-        });
-      } catch {
-        /* cancelled */
-      }
-    } else {
-      await copyLink();
-    }
-  };
-
-  const saveResultImage = async () => {
-    if (!shareCardRef.current) return;
-    gtagEvent("share", { method: "save_image", quiz_id: "market-cap" });
+  /* generate share card image as File */
+  const generateShareImage = async (): Promise<File | null> => {
     const el = shareCardRef.current;
+    if (!el) return null;
     const orig = el.style.cssText;
     try {
       await document.fonts.ready;
@@ -261,25 +206,110 @@ export default function MarketCapEngine() {
       const blob = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob(resolve, "image/png")
       );
-      if (!blob) return;
-      const file = new File([blob], "market-cap-result.png", { type: "image/png" });
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file] });
-      } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "market-cap-result.png";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        toast("이미지 저장 완료! 인스타 스토리에 올려보세요");
-      }
+      if (!blob) return null;
+      return new File([blob], "market-cap-result.png", { type: "image/png" });
     } catch {
       el.style.cssText = orig;
-      toast("이미지 생성에 실패했어요");
+      return null;
     }
+  };
+
+  /* share with image via native share sheet */
+  const shareWithImage = async (method: string) => {
+    gtagEvent("share", { method, quiz_id: "market-cap" });
+    toast("이미지 생성 중...");
+    const file = await generateShareImage();
+    if (file && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({
+          text: getShareText(),
+          files: [file],
+        });
+      } catch {
+        /* user cancelled */
+      }
+    } else if (file) {
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "market-cap-result.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast("이미지 저장 완료! 📸");
+    } else {
+      toast("이미지 생성에 실패했어요 😢");
+    }
+  };
+
+  const shareToKakao = async () => {
+    gtagEvent("share", { method: "kakao", quiz_id: "market-cap" });
+    // Mobile: generate image → native share sheet
+    toast("이미지 생성 중...");
+    const file = await generateShareImage();
+    if (file && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({
+          text: getShareText(),
+          files: [file],
+        });
+        return;
+      } catch {
+        /* user cancelled or failed, fall through to SDK */
+      }
+    }
+    // Desktop fallback: KakaoTalk SDK
+    initKakao();
+    try {
+      if (window.Kakao && window.Kakao.isInitialized()) {
+        window.Kakao.Share.sendDefault({
+          objectType: "feed",
+          content: {
+            title: `📊 ${displayName} 시가총액: ${result.marketCap.display}`,
+            description: `${result.grade.emoji} ${result.grade.grade} | ${result.grade.opinion}\n📋 신용등급: ${result.creditGrade}`,
+            imageUrl: "https://pickmetype.vercel.app/opengraph-image",
+            link: {
+              mobileWebUrl: "https://pickmetype.vercel.app/market-cap",
+              webUrl: "https://pickmetype.vercel.app/market-cap",
+            },
+          },
+          buttons: [
+            {
+              title: "나도 측정하기",
+              link: {
+                mobileWebUrl: "https://pickmetype.vercel.app/market-cap",
+                webUrl: "https://pickmetype.vercel.app/market-cap",
+              },
+            },
+          ],
+        });
+      } else {
+        await copyLink();
+      }
+    } catch {
+      await copyLink();
+    }
+  };
+
+  const shareToX = () => {
+    gtagEvent("share", { method: "x", quiz_id: "market-cap" });
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText())}`;
+    window.open(url, "_blank", "width=600,height=400");
+  };
+
+  const copyLink = async () => {
+    gtagEvent("share", { method: "copy_link", quiz_id: "market-cap" });
+    try {
+      await navigator.clipboard.writeText(`${getShareText()}\n${shareUrl}`);
+      toast("링크가 복사되었어요! 📋");
+    } catch {
+      toast("링크 복사에 실패했어요 😢");
+    }
+  };
+
+  const saveResultImage = async () => {
+    await shareWithImage("save_image");
   };
 
   const today = new Date();
