@@ -93,3 +93,20 @@ body {
 .article-content a {
   @apply text-orange-500 hover:underline;
 }
+
+/* scan line animation for celebrity face analysis */
+@keyframes scanLine {
+  0% { top: -2px; }
+  100% { top: calc(100% + 2px); }
+}
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #f59e0b, #eab308, #f59e0b, transparent);
+  box-shadow: 0 0 12px 4px rgba(245, 158, 11, 0.4);
+  animation: scanLine 2s ease-in-out infinite;
+  z-index: 10;
+  pointer-events: none;
+}

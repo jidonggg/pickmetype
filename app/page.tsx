@@ -29,6 +29,14 @@ const tests = [
     gradient: "from-violet-500 via-purple-500 to-indigo-500",
   },
   {
+    id: "celebrity-face",
+    emoji: "⭐",
+    title: "AI 닮은 연예인 찾기",
+    subtitle: "사진 한 장으로 닮은 연예인 찾기!",
+    available: true,
+    gradient: "from-amber-400 via-yellow-500 to-orange-500",
+  },
+  {
     id: "dubai-cookie",
     emoji: "🍪",
     title: "나는 어떤 두쫀쿠?",
