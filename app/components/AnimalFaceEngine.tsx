@@ -488,7 +488,7 @@ export default function AnimalFaceEngine() {
       const canvas = await html2canvas(el, {
         scale: 2,
         useCORS: true,
-        backgroundColor: "#ffffff",
+        backgroundColor: selectedCardStyle === 3 ? "#111111" : "#ffffff",
         width: 540,
         height: 720,
       });
@@ -880,9 +880,7 @@ export default function AnimalFaceEngine() {
             <p style={{ fontSize: 12, color: "#999", letterSpacing: 4, fontWeight: 500, marginBottom: 16 }}>나의 동물상은</p>
             <div style={{ position: "relative", marginBottom: 16 }}>
               {userPhoto ? (
-                <div style={{ width: 180, height: 180, borderRadius: "50%", overflow: "hidden", border: `4px solid ${r.color}`, boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}>
-                  <img src={userPhoto} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
+                <div style={{ width: 180, height: 180, borderRadius: "50%", border: `4px solid ${r.color}`, boxShadow: "0 8px 30px rgba(0,0,0,0.12)", backgroundImage: `url(${userPhoto})`, backgroundSize: "cover", backgroundPosition: "center" }} />
               ) : (
                 <div style={{ width: 180, height: 180, borderRadius: "50%", background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 80, border: `4px solid ${r.color}`, boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}>
                   {r.emoji}
@@ -928,13 +926,11 @@ export default function AnimalFaceEngine() {
               </p>
             </div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, flex: "0 0 auto", padding: "0 24px", marginBottom: 16 }}>
-              <div style={{ width: 200, height: 200, borderRadius: 24, overflow: "hidden", border: "3px solid #eee", flexShrink: 0 }}>
-                {userPhoto ? (
-                  <img src={userPhoto} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 72 }}>😊</div>
-                )}
-              </div>
+              {userPhoto ? (
+                <div style={{ width: 200, height: 200, borderRadius: 24, border: "3px solid #eee", flexShrink: 0, backgroundImage: `url(${userPhoto})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+              ) : (
+                <div style={{ width: 200, height: 200, borderRadius: 24, border: "3px solid #eee", flexShrink: 0, background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 72 }}>😊</div>
+              )}
               <div style={{ fontSize: 32, fontWeight: 900, color: r.color, padding: "0 12px", flexShrink: 0 }}>=</div>
               <div style={{ width: 200, height: 200, borderRadius: 24, background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: `3px solid ${r.color}`, flexShrink: 0 }}>
                 <div style={{ fontSize: 72, lineHeight: 1, marginBottom: 8 }}>{r.emoji}</div>
@@ -978,7 +974,7 @@ export default function AnimalFaceEngine() {
         <div ref={shareCard3Ref} aria-hidden="true" style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}>
           <div style={{ width: 540, height: 720, position: "relative", fontFamily: "'Noto Sans KR', sans-serif", overflow: "hidden", background: "#111" }}>
             {userPhoto ? (
-              <img src={userPhoto} alt="" style={{ width: 540, height: 400, objectFit: "cover", display: "block" }} />
+              <div style={{ width: 540, height: 400, backgroundImage: `url(${userPhoto})`, backgroundSize: "cover", backgroundPosition: "center" }} />
             ) : (
               <div style={{ width: 540, height: 400, background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 120 }}>{r.emoji}</div>
             )}
