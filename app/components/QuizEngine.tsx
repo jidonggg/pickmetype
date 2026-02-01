@@ -305,6 +305,30 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
     }
   };
 
+  const shareToInstagram = async () => {
+    if (!result) return;
+    gtagEvent("share", { method: "instagram", quiz_id: config.id, result_type: result });
+    toast("이미지 생성 중...");
+    const file = await generateShareImage();
+    if (file && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file] });
+      } catch { /* user cancelled */ }
+    } else if (file) {
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${config.id}-result.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast("이미지 저장 완료! 인스타에 업로드해주세요");
+    } else {
+      toast("이미지 생성에 실패했어요");
+    }
+  };
+
   const saveResultImage = async () => {
     await shareWithImage("save_image");
   };
@@ -570,11 +594,11 @@ export default function QuizEngine({ config }: { config: QuizConfig }) {
                 카카오톡
               </button>
               <button
-                onClick={saveResultImage}
+                onClick={shareToInstagram}
                 className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white rounded-2xl font-bold text-[12px] transition-colors"
               >
-                <span className="text-2xl">📸</span>
-                이미지 저장
+                <span className="text-2xl">📷</span>
+                인스타
               </button>
               <button
                 onClick={shareToX}
