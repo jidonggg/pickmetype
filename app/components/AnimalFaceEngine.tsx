@@ -395,12 +395,96 @@ export default function AnimalFaceEngine() {
 
   const getShareText = () => {
     if (!resultAnimal) return "";
-    return `나의 동물상은 "${resultAnimal.name}" ${resultAnimal.emoji}\n${resultAnimal.shortDesc}\n\n너도 테스트 해봐!`;
+    const matchText = topMatches
+      .map((m) => {
+        const a = animalTypes[m.animal];
+        return a ? `${a.emoji}${a.name} ${m.percentage}%` : "";
+      })
+      .filter(Boolean)
+      .join(" | ");
+    return `${resultAnimal.emoji} 나의 동물상은 "${resultAnimal.name}"!\n${resultAnimal.shortDesc}\n${matchText}\n\n너도 해봐! → pickmetype.vercel.app/animal-face`;
   };
 
-  const shareToKakao = () => {
+  /* generate share card image as File */
+  const generateShareImage = async (): Promise<File | null> => {
+    const refs = { 1: shareCard1Ref, 2: shareCard2Ref, 3: shareCard3Ref };
+    const el = refs[selectedCardStyle].current;
+    if (!el) return null;
+    const orig = el.style.cssText;
+    try {
+      await document.fonts.ready;
+      el.style.cssText = "position:fixed;left:0;top:0;width:540px;height:720px;z-index:-9999;pointer-events:none;";
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: selectedCardStyle === 3 ? "#111111" : "#ffffff",
+        width: 540,
+        height: 720,
+      });
+      el.style.cssText = orig;
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+      if (!blob) return null;
+      return new File([blob], "my-animal-face.png", { type: "image/png" });
+    } catch {
+      el.style.cssText = orig;
+      return null;
+    }
+  };
+
+  /* share with image via native share sheet (mobile: KakaoTalk, Instagram, etc.) */
+  const shareWithImage = async (method: string) => {
+    if (!resultAnimal) return;
+    gtagEvent("share", { method, quiz_id: "animal-face", result_type: resultAnimal.id });
+    toast("이미지 생성 중...");
+    const file = await generateShareImage();
+    if (file && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({
+          text: getShareText(),
+          files: [file],
+        });
+      } catch {
+        /* user cancelled */
+      }
+    } else if (file) {
+      // Desktop fallback: download image
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "my-animal-face.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast("이미지 저장 완료! 📸");
+    } else {
+      toast("이미지 생성에 실패했어요 😢");
+    }
+  };
+
+  const shareToKakao = async () => {
     if (!resultAnimal) return;
     gtagEvent("share", { method: "kakao", quiz_id: "animal-face", result_type: resultAnimal.id });
+
+    // Mobile: generate image → native share sheet (user picks KakaoTalk)
+    toast("이미지 생성 중...");
+    const file = await generateShareImage();
+    if (file && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({
+          text: getShareText(),
+          files: [file],
+        });
+        return;
+      } catch {
+        /* user cancelled or failed, fall through to SDK */
+      }
+    }
+
+    // Desktop fallback: KakaoTalk SDK (no image attachment possible)
     initKakao();
     const matchText = topMatches
       .map((m) => {
@@ -433,11 +517,10 @@ export default function AnimalFaceEngine() {
           ],
         });
       } else {
-        shareNative();
+        await copyLink();
       }
-    } catch (e) {
-      alert("카카오 공유 오류: " + JSON.stringify(e));
-      shareNative();
+    } catch {
+      await copyLink();
     }
   };
 
@@ -445,76 +528,23 @@ export default function AnimalFaceEngine() {
     gtagEvent("share", { method: "x", quiz_id: "animal-face", result_type: resultAnimal?.id || "" });
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       getShareText()
-    )}&url=${encodeURIComponent(shareUrl)}`;
+    )}`;
     window.open(url, "_blank", "width=600,height=400");
   };
 
   const copyLink = async () => {
     gtagEvent("share", { method: "copy_link", quiz_id: "animal-face", result_type: resultAnimal?.id || "" });
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(`${getShareText()}\n${shareUrl}`);
       toast("링크가 복사되었어요! 📋");
     } catch {
       toast("링크 복사에 실패했어요 😢");
     }
   };
 
-  const shareNative = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "AI 동물상 테스트",
-          text: getShareText(),
-          url: shareUrl,
-        });
-      } catch {
-        /* cancelled */
-      }
-    } else {
-      await copyLink();
-    }
-  };
-
   const saveResultImage = async () => {
-    const refs = { 1: shareCard1Ref, 2: shareCard2Ref, 3: shareCard3Ref };
-    const el = refs[selectedCardStyle].current;
-    if (!el) return;
     gtagEvent("share", { method: "save_image", quiz_id: "animal-face", result_type: resultAnimal?.id || "" });
-    const orig = el.style.cssText;
-    try {
-      await document.fonts.ready;
-      el.style.cssText = "position:fixed;left:0;top:0;width:540px;height:720px;z-index:-9999;pointer-events:none;";
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(el, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: selectedCardStyle === 3 ? "#111111" : "#ffffff",
-        width: 540,
-        height: 720,
-      });
-      el.style.cssText = orig;
-      const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, "image/png")
-      );
-      if (!blob) return;
-      const file = new File([blob], "my-animal-face.png", { type: "image/png" });
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file] });
-      } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "my-animal-face.png";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        toast("이미지 저장 완료! 인스타 스토리에 올려보세요 📸");
-      }
-    } catch {
-      el.style.cssText = orig;
-      toast("이미지 생성에 실패했어요 😢");
-    }
+    await shareWithImage("save_image");
   };
 
   // ========== INTRO ==========
