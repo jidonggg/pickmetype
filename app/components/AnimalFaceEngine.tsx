@@ -81,7 +81,11 @@ export default function AnimalFaceEngine() {
   const [analysisStep, setAnalysisStep] = useState(0);
   const [uploadPreview, setUploadPreview] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const shareCardRef = useRef<HTMLDivElement>(null);
+  const shareCard1Ref = useRef<HTMLDivElement>(null);
+  const shareCard2Ref = useRef<HTMLDivElement>(null);
+  const shareCard3Ref = useRef<HTMLDivElement>(null);
+  const [userPhoto, setUserPhoto] = useState<string | null>(null);
+  const [selectedCardStyle, setSelectedCardStyle] = useState<1 | 2 | 3>(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<"photo" | "quiz" | null>(null);
   const [zoom, setZoom] = useState(1);
@@ -280,6 +284,7 @@ export default function AnimalFaceEngine() {
 
     try {
       const imageToSend = zoom > 1 ? await getCroppedImage() : uploadPreview;
+      setUserPhoto(imageToSend);
       const res = await fetch("/api/analyze-animal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -376,6 +381,8 @@ export default function AnimalFaceEngine() {
     setTopMatches([]);
     setUploadPreview(null);
     setUploadError(null);
+    setUserPhoto(null);
+    setSelectedCardStyle(1);
     setMode(null);
     setZoom(1);
     setPanPos({ x: 0, y: 0 });
@@ -395,16 +402,35 @@ export default function AnimalFaceEngine() {
     if (!resultAnimal) return;
     gtagEvent("share", { method: "kakao", quiz_id: "animal-face", result_type: resultAnimal.id });
     initKakao();
+    const matchText = topMatches
+      .map((m) => {
+        const a = animalTypes[m.animal];
+        return a ? `${a.emoji} ${a.name} ${m.percentage}%` : "";
+      })
+      .filter(Boolean)
+      .join(" | ");
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
         window.Kakao.Share.sendDefault({
-          objectType: "text",
-          text: `${resultAnimal.emoji} 나의 동물상: ${resultAnimal.name}\n\n${resultAnimal.shortDesc}`,
-          link: {
-            mobileWebUrl: "https://pickmetype.vercel.app/animal-face",
-            webUrl: "https://pickmetype.vercel.app/animal-face",
+          objectType: "feed",
+          content: {
+            title: `${resultAnimal.emoji} 나의 동물상은 ${resultAnimal.name}!`,
+            description: `${resultAnimal.shortDesc}\n${matchText}`,
+            imageUrl: "https://pickmetype.vercel.app/opengraph-image",
+            link: {
+              mobileWebUrl: "https://pickmetype.vercel.app/animal-face",
+              webUrl: "https://pickmetype.vercel.app/animal-face",
+            },
           },
-          buttonTitle: "나도 테스트하기",
+          buttons: [
+            {
+              title: "나도 테스트하기",
+              link: {
+                mobileWebUrl: "https://pickmetype.vercel.app/animal-face",
+                webUrl: "https://pickmetype.vercel.app/animal-face",
+              },
+            },
+          ],
         });
       } else {
         shareNative();
@@ -450,9 +476,10 @@ export default function AnimalFaceEngine() {
   };
 
   const saveResultImage = async () => {
-    if (!shareCardRef.current) return;
+    const refs = { 1: shareCard1Ref, 2: shareCard2Ref, 3: shareCard3Ref };
+    const el = refs[selectedCardStyle].current;
+    if (!el) return;
     gtagEvent("share", { method: "save_image", quiz_id: "animal-face", result_type: resultAnimal?.id || "" });
-    const el = shareCardRef.current;
     const orig = el.style.cssText;
     try {
       await document.fonts.ready;
@@ -841,60 +868,163 @@ export default function AnimalFaceEngine() {
           background: `linear-gradient(to bottom, ${r.bgStart}, #ffffff, ${r.bgEnd})`,
         }}
       >
-        {/* Hidden share card */}
-        <div
-          ref={shareCardRef}
-          aria-hidden="true"
-          style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}
-        >
-          <div
-            style={{
-              width: 540,
-              height: 720,
-              background: `linear-gradient(160deg, ${r.bgStart} 0%, #fff 50%, ${r.bgEnd} 100%)`,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "0 36px",
-              position: "relative",
-              fontFamily: "'Noto Sans KR', sans-serif",
-            }}
-          >
-            <div style={{ width: "100%", textAlign: "center", paddingTop: 28, marginBottom: 8 }}>
+        {/* Hidden share cards (3 styles) */}
+        {/* Style 1: Photo + Animal Fusion Card */}
+        <div ref={shareCard1Ref} aria-hidden="true" style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}>
+          <div style={{ width: 540, height: 720, background: `linear-gradient(160deg, ${r.bgStart} 0%, #fff 50%, ${r.bgEnd} 100%)`, display: "flex", flexDirection: "column", alignItems: "center", padding: "0 36px", position: "relative", fontFamily: "'Noto Sans KR', sans-serif" }}>
+            <div style={{ width: "100%", textAlign: "center", paddingTop: 24, marginBottom: 12 }}>
               <p style={{ fontSize: 16, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif", color: "#333" }}>
                 pick<span style={{ color: r.color }}>me</span>type
               </p>
             </div>
-            <div style={{ width: 60, height: 2, background: r.color, opacity: 0.3, borderRadius: 1, marginBottom: 24 }} />
-            <p style={{ fontSize: 13, color: "#999", letterSpacing: 4, fontWeight: 500, marginBottom: 16 }}>
-              나의 동물상은
-            </p>
-            <div style={{ fontSize: 88, marginBottom: 12, lineHeight: 1 }}>{r.emoji}</div>
-            <h2 style={{ fontSize: 32, fontWeight: 900, color: r.color, marginBottom: 6, fontFamily: "'Black Han Sans', sans-serif" }}>
-              {r.name}
-            </h2>
-            <p style={{ fontSize: 16, fontWeight: 700, color: r.color, marginBottom: 24, textAlign: "center" }}>
-              {r.shortDesc}
-            </p>
-            <div style={{ background: "rgba(255,255,255,0.7)", borderRadius: 16, padding: "16px 20px", marginBottom: 20, width: "100%", textAlign: "center" }}>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#555" }}>
-                {r.personality.split("\n")[0]}
-              </p>
+            <p style={{ fontSize: 12, color: "#999", letterSpacing: 4, fontWeight: 500, marginBottom: 16 }}>나의 동물상은</p>
+            <div style={{ position: "relative", marginBottom: 16 }}>
+              {userPhoto ? (
+                <div style={{ width: 180, height: 180, borderRadius: "50%", overflow: "hidden", border: `4px solid ${r.color}`, boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}>
+                  <img src={userPhoto} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              ) : (
+                <div style={{ width: 180, height: 180, borderRadius: "50%", background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 80, border: `4px solid ${r.color}`, boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}>
+                  {r.emoji}
+                </div>
+              )}
+              <div style={{ position: "absolute", bottom: -4, right: -4, fontSize: 56, lineHeight: 1, filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.2))" }}>{r.emoji}</div>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 20 }}>
+            <h2 style={{ fontSize: 32, fontWeight: 900, color: r.color, marginBottom: 4, fontFamily: "'Black Han Sans', sans-serif" }}>{r.name}</h2>
+            <p style={{ fontSize: 15, fontWeight: 700, color: r.color, marginBottom: 16, textAlign: "center" }}>{r.shortDesc}</p>
+            <div style={{ width: "100%", marginBottom: 16 }}>
+              {topMatches.slice(0, 3).map((m, i) => {
+                const a = animalTypes[m.animal];
+                if (!a) return null;
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <span style={{ fontSize: 14, width: 80, textAlign: "right" }}>{a.emoji} {a.name}</span>
+                    <div style={{ flex: 1, height: 14, background: "rgba(0,0,0,0.06)", borderRadius: 7, overflow: "hidden" }}>
+                      <div style={{ width: `${m.percentage}%`, height: "100%", background: a.color, borderRadius: 7 }} />
+                    </div>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: a.color, width: 36, textAlign: "right" }}>{m.percentage}%</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center", marginBottom: 16 }}>
               {r.tags.map((tag, i) => (
-                <span key={i} style={{ background: r.color, color: "#fff", padding: "6px 16px", borderRadius: 999, fontSize: 12, fontWeight: 600 }}>
-                  {tag}
-                </span>
+                <span key={i} style={{ background: r.color, color: "#fff", padding: "5px 14px", borderRadius: 999, fontSize: 11, fontWeight: 600 }}>{tag}</span>
               ))}
             </div>
-            <div style={{ position: "absolute", bottom: 24, width: "calc(100% - 72px)", textAlign: "center" }}>
-              <div style={{ background: r.color, color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
-                나도 테스트하기 → pickmetype.vercel.app
-              </div>
-              <p style={{ fontSize: 11, color: "#bbb" }}>
-                AI 동물상 테스트
+            <div style={{ position: "absolute", bottom: 20, width: "calc(100% - 72px)", textAlign: "center" }}>
+              <div style={{ background: r.color, color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 6 }}>나도 테스트하기 → pickmetype.vercel.app</div>
+              <p style={{ fontSize: 11, color: "#bbb" }}>AI 동물상 테스트</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Style 2: Split Comparison Card */}
+        <div ref={shareCard2Ref} aria-hidden="true" style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}>
+          <div style={{ width: 540, height: 720, background: "#fff", display: "flex", flexDirection: "column", position: "relative", fontFamily: "'Noto Sans KR', sans-serif", overflow: "hidden" }}>
+            <div style={{ width: "100%", textAlign: "center", paddingTop: 20, marginBottom: 12 }}>
+              <p style={{ fontSize: 15, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif", color: "#333" }}>
+                pick<span style={{ color: r.color }}>me</span>type
               </p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, flex: "0 0 auto", padding: "0 24px", marginBottom: 16 }}>
+              <div style={{ width: 200, height: 200, borderRadius: 24, overflow: "hidden", border: "3px solid #eee", flexShrink: 0 }}>
+                {userPhoto ? (
+                  <img src={userPhoto} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 72 }}>😊</div>
+                )}
+              </div>
+              <div style={{ fontSize: 32, fontWeight: 900, color: r.color, padding: "0 12px", flexShrink: 0 }}>=</div>
+              <div style={{ width: 200, height: 200, borderRadius: 24, background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: `3px solid ${r.color}`, flexShrink: 0 }}>
+                <div style={{ fontSize: 72, lineHeight: 1, marginBottom: 8 }}>{r.emoji}</div>
+                <p style={{ fontSize: 16, fontWeight: 900, color: r.color, fontFamily: "'Black Han Sans', sans-serif" }}>{r.name}</p>
+              </div>
+            </div>
+            <div style={{ textAlign: "center", padding: "0 36px", marginBottom: 12 }}>
+              <p style={{ fontSize: 22, fontWeight: 900, color: r.color, fontFamily: "'Black Han Sans', sans-serif", marginBottom: 4 }}>
+                나는 {r.emoji} {r.name}!
+              </p>
+              <p style={{ fontSize: 14, color: "#666", fontWeight: 600 }}>{r.shortDesc}</p>
+            </div>
+            <div style={{ padding: "0 36px", marginBottom: 12 }}>
+              {topMatches.slice(0, 3).map((m, i) => {
+                const a = animalTypes[m.animal];
+                if (!a) return null;
+                return (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+                    <span style={{ fontSize: 13, width: 80, textAlign: "right" }}>{a.emoji} {a.name}</span>
+                    <div style={{ flex: 1, height: 12, background: "#f0f0f0", borderRadius: 6, overflow: "hidden" }}>
+                      <div style={{ width: `${m.percentage}%`, height: "100%", background: a.color, borderRadius: 6 }} />
+                    </div>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: a.color, width: 34 }}>{m.percentage}%</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center", padding: "0 36px", marginBottom: 12 }}>
+              {r.tags.map((tag, i) => (
+                <span key={i} style={{ background: r.color, color: "#fff", padding: "5px 14px", borderRadius: 999, fontSize: 11, fontWeight: 600 }}>{tag}</span>
+              ))}
+            </div>
+            <div style={{ position: "absolute", bottom: 20, width: "100%", textAlign: "center", padding: "0 36px" }}>
+              <div style={{ background: r.color, color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 6 }}>나도 테스트하기 → pickmetype.vercel.app</div>
+              <p style={{ fontSize: 11, color: "#bbb" }}>AI 동물상 테스트</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Style 3: Profile Overlay Card */}
+        <div ref={shareCard3Ref} aria-hidden="true" style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}>
+          <div style={{ width: 540, height: 720, position: "relative", fontFamily: "'Noto Sans KR', sans-serif", overflow: "hidden", background: "#111" }}>
+            {userPhoto ? (
+              <img src={userPhoto} alt="" style={{ width: 540, height: 400, objectFit: "cover", display: "block" }} />
+            ) : (
+              <div style={{ width: 540, height: 400, background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 120 }}>{r.emoji}</div>
+            )}
+            <div style={{ position: "absolute", top: 300, left: 0, right: 0, height: 120, background: "linear-gradient(to bottom, transparent, #111)" }} />
+            <div style={{ position: "absolute", top: 16, left: 20 }}>
+              <p style={{ fontSize: 14, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif", color: "rgba(255,255,255,0.9)", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                pick<span style={{ color: r.color }}>me</span>type
+              </p>
+            </div>
+            <div style={{ position: "absolute", top: 380, left: 0, right: 0, bottom: 0, padding: "0 32px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                <span style={{ fontSize: 48, lineHeight: 1 }}>{r.emoji}</span>
+                <div>
+                  <h2 style={{ fontSize: 28, fontWeight: 900, color: "#fff", fontFamily: "'Black Han Sans', sans-serif", lineHeight: 1.2 }}>{r.name}</h2>
+                  <p style={{ fontSize: 14, color: r.color, fontWeight: 700 }}>
+                    {topMatches[0] ? `${topMatches[0].percentage}% 매칭` : ""}
+                  </p>
+                </div>
+              </div>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", textAlign: "center", marginBottom: 12, fontWeight: 600 }}>{r.shortDesc}</p>
+              <div style={{ width: "100%", background: "rgba(255,255,255,0.08)", borderRadius: 16, padding: "12px 16px", marginBottom: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                  <span style={{ fontSize: 12 }}>💕</span>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>연애:</span>
+                  <span style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{r.loveStyle.slice(0, 30)}...</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                  <span style={{ fontSize: 12 }}>💞</span>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>찰떡궁합:</span>
+                  <span style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{r.bestMatch}</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ fontSize: 12 }}>⭐</span>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>닮은 연예인:</span>
+                  <span style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{r.celebrities.slice(0, 2).join(", ")}</span>
+                </div>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5, justifyContent: "center", marginBottom: 12 }}>
+                {r.tags.slice(0, 4).map((tag, i) => (
+                  <span key={i} style={{ background: r.color, color: "#fff", padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 600 }}>{tag}</span>
+                ))}
+              </div>
+              <div style={{ position: "absolute", bottom: 16, left: 32, right: 32, textAlign: "center" }}>
+                <div style={{ background: r.color, color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 4 }}>나도 테스트하기 → pickmetype.vercel.app</div>
+                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>AI 동물상 테스트</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1048,38 +1178,101 @@ export default function AnimalFaceEngine() {
             </div>
           </div>
 
-          {/* share */}
+          {/* share card style selector */}
           <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.3s" }}>
             <h3 className="text-lg font-bold mb-3 text-center" style={{ fontFamily: "var(--font-display)" }}>
-              친구한테 공유하기 📢
+              공유 이미지 스타일 선택 📸
             </h3>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {([1, 2, 3] as const).map((style) => (
+                <button
+                  key={style}
+                  onClick={() => setSelectedCardStyle(style)}
+                  className={`relative rounded-xl overflow-hidden border-2 transition-all ${
+                    selectedCardStyle === style
+                      ? "border-purple-500 shadow-lg scale-[1.02]"
+                      : "border-gray-200 opacity-70"
+                  }`}
+                >
+                  {/* Mini preview */}
+                  <div className="aspect-[3/4] flex flex-col items-center justify-center p-2" style={{
+                    background: style === 3 ? "#222" : style === 2 ? "#fff" : `linear-gradient(160deg, ${r.bgStart}, #fff, ${r.bgEnd})`,
+                  }}>
+                    {style === 1 && (
+                      <>
+                        {userPhoto ? (
+                          <div className="w-10 h-10 rounded-full overflow-hidden border-2 mb-1" style={{ borderColor: r.color }}>
+                            <img src={userPhoto} alt="" className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <div className="text-2xl mb-1">{r.emoji}</div>
+                        )}
+                        <div className="text-lg">{r.emoji}</div>
+                        <p className="text-[8px] font-bold mt-0.5" style={{ color: r.color }}>{r.name}</p>
+                      </>
+                    )}
+                    {style === 2 && (
+                      <div className="flex items-center gap-1">
+                        {userPhoto ? (
+                          <div className="w-8 h-8 rounded-md overflow-hidden border">
+                            <img src={userPhoto} alt="" className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-md flex items-center justify-center text-sm" style={{ background: r.bgStart }}>😊</div>
+                        )}
+                        <span className="text-[10px] font-bold" style={{ color: r.color }}>=</span>
+                        <div className="w-8 h-8 rounded-md flex items-center justify-center text-lg" style={{ background: `linear-gradient(135deg, ${r.bgStart}, ${r.bgEnd})` }}>
+                          {r.emoji}
+                        </div>
+                      </div>
+                    )}
+                    {style === 3 && (
+                      <>
+                        {userPhoto ? (
+                          <div className="w-full h-8 rounded-md overflow-hidden mb-1">
+                            <img src={userPhoto} alt="" className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <div className="text-xl mb-1">{r.emoji}</div>
+                        )}
+                        <p className="text-[8px] font-bold text-white">{r.emoji} {r.name}</p>
+                      </>
+                    )}
+                  </div>
+                  <div className={`text-[10px] font-bold py-1 text-center ${
+                    selectedCardStyle === style ? "bg-purple-500 text-white" : "bg-gray-100 text-gray-500"
+                  }`}>
+                    {style === 1 ? "퓨전" : style === 2 ? "비교" : "프로필"}
+                  </div>
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={saveResultImage}
+              className="quiz-btn w-full py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white rounded-2xl font-bold text-sm mb-3 transition-all hover:shadow-lg"
+            >
+              📸 이 디자인으로 이미지 저장
+            </button>
+            <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={shareToKakao}
-                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-[#FEE500] hover:bg-[#FDD800] text-gray-900 rounded-2xl font-bold text-[12px] transition-colors"
+                className="quiz-btn flex flex-col items-center gap-1 py-2.5 bg-[#FEE500] hover:bg-[#FDD800] text-gray-900 rounded-2xl font-bold text-[11px] transition-colors"
               >
-                <span className="text-2xl">💬</span>
+                <span className="text-xl">💬</span>
                 카카오톡
               </button>
               <button
-                onClick={saveResultImage}
-                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white rounded-2xl font-bold text-[12px] transition-colors"
-              >
-                <span className="text-2xl">📸</span>
-                이미지 저장
-              </button>
-              <button
                 onClick={shareToX}
-                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-bold text-[12px] transition-colors"
+                className="quiz-btn flex flex-col items-center gap-1 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-bold text-[11px] transition-colors"
               >
-                <span className="text-2xl">𝕏</span>
+                <span className="text-xl">𝕏</span>
                 트위터
               </button>
               <button
                 onClick={copyLink}
-                className="quiz-btn flex flex-col items-center gap-1.5 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold text-[12px] transition-colors"
+                className="quiz-btn flex flex-col items-center gap-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold text-[11px] transition-colors"
               >
-                <span className="text-2xl">🔗</span>
+                <span className="text-xl">🔗</span>
                 링크복사
               </button>
             </div>
