@@ -448,6 +448,31 @@ export default function CelebrityFaceEngine() {
     await shareWithImage("save_image");
   };
 
+  const shareToInstagram = async () => {
+    if (!result) return;
+    gtagEvent("share", { method: "instagram", quiz_id: "celebrity-face", result_type: result.sameGenderTop5[0]?.celebrityId || "" });
+    toast("이미지 생성 중...");
+    const file = await generateShareImage();
+    if (file && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file] });
+      } catch { /* user cancelled */ }
+    } else if (file) {
+      // Desktop: download image, user can upload to Instagram manually
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "my-celebrity-face.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast("이미지 저장 완료! 인스타에 업로드해주세요");
+    } else {
+      toast("이미지 생성에 실패했어요");
+    }
+  };
+
   // Helper: get uniqueRate label and color
   const getUniqueLabel = (rate: number) => {
     if (rate < 25) return { label: "흔함", color: "#9CA3AF" };
@@ -1094,13 +1119,20 @@ export default function CelebrityFaceEngine() {
             >
               📸 이미지 저장하기
             </button>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-4 gap-2">
               <button
                 onClick={shareToKakao}
                 className="quiz-btn flex flex-col items-center gap-1 py-2.5 bg-[#FEE500] hover:bg-[#FDD800] text-gray-900 rounded-2xl font-bold text-[11px] transition-colors"
               >
                 <span className="text-xl">💬</span>
                 카카오톡
+              </button>
+              <button
+                onClick={shareToInstagram}
+                className="quiz-btn flex flex-col items-center gap-1 py-2.5 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white rounded-2xl font-bold text-[11px] transition-colors"
+              >
+                <span className="text-xl">📷</span>
+                인스타
               </button>
               <button
                 onClick={shareToX}
