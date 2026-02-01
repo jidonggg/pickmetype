@@ -9,11 +9,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "나는 어떤 두쫀쿠? 🍪",
     description: "요즘 핫한 두바이 쫀득 쿠키로 알아보는 내 성격!",
+    images: ["/opengraph-image"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "나는 어떤 두쫀쿠? 🍪",
     description: "요즘 핫한 두바이 쫀득 쿠키로 알아보는 내 성격!",
+    images: ["/opengraph-image"],
   },
 };
 

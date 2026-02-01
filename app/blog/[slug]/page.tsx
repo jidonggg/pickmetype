@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.publishedAt,
       authors: [post.author],
       tags: post.tags,
+      images: ["/opengraph-image"],
     },
   };
 }

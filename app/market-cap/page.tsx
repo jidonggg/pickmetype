@@ -8,11 +8,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "나의 시가총액 측정기 💰",
     description: "내가 회사라면 시가총액은 얼마일까?",
+    images: ["/opengraph-image"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "나의 시가총액 측정기 💰",
     description: "내가 회사라면 시가총액은 얼마일까?",
+    images: ["/opengraph-image"],
   },
 };
 

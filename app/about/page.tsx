@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "소개 | pickmetype",
     description: "심리학 기반 성격 테스트와 유형 퀴즈 서비스",
+    images: ["/opengraph-image"],
   },
 };
 

@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "개인정보처리방침 | pickmetype",
     description: "pickmetype 개인정보처리방침",
+    images: ["/opengraph-image"],
   },
 };
 

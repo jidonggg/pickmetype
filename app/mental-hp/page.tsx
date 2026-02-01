@@ -8,11 +8,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "나의 멘탈 HP 측정기 ⚔️",
     description: "RPG 스탯으로 보는 내 멘탈 상태!",
+    images: ["/opengraph-image"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "나의 멘탈 HP 측정기 ⚔️",
     description: "RPG 스탯으로 보는 내 멘탈 상태!",
+    images: ["/opengraph-image"],
   },
 };
 

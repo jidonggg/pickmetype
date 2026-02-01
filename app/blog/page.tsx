@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "블로그 | pickmetype",
     description: "심리 테스트, MBTI, 자기이해에 관한 유익한 글",
+    images: ["/opengraph-image"],
   },
 };
 

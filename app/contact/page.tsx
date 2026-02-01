@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "문의하기 | pickmetype",
     description: "pickmetype 오류 제보, 문의 및 자주 묻는 질문",
+    images: ["/opengraph-image"],
   },
 };
 

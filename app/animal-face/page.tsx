@@ -8,11 +8,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI 동물상 테스트 🐾",
     description: "AI가 분석하는 나의 동물상!",
+    images: ["/opengraph-image"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "AI 동물상 테스트 🐾",
     description: "AI가 분석하는 나의 동물상!",
+    images: ["/opengraph-image"],
   },
 };
 
