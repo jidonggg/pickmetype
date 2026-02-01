@@ -11,6 +11,12 @@ export const metadata: Metadata = {
     description: "심리 테스트, MBTI, 자기이해에 관한 유익한 글",
     images: ["/opengraph-image"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "블로그 | pickmetype",
+    description: "심리 테스트, MBTI, 자기이해에 관한 유익한 글",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function BlogListPage() {

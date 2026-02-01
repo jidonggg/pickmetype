@@ -10,6 +10,12 @@ export const metadata: Metadata = {
     description: "심리학 기반 성격 테스트와 유형 퀴즈 서비스",
     images: ["/opengraph-image"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "소개 | pickmetype",
+    description: "심리학 기반 성격 테스트와 유형 퀴즈 서비스",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function AboutPage() {

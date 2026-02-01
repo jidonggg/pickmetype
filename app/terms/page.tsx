@@ -8,6 +8,12 @@ export const metadata: Metadata = {
     description: "pickmetype 이용약관",
     images: ["/opengraph-image"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "이용약관 | pickmetype",
+    description: "pickmetype 이용약관",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function TermsPage() {

@@ -11,6 +11,12 @@ export const metadata: Metadata = {
     description: "재미있는 성격 테스트 모음! 나의 유형을 찾아보세요.",
     images: ["/opengraph-image"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "pickmetype | 나의 유형 찾기",
+    description: "재미있는 성격 테스트 모음! 나의 유형을 찾아보세요.",
+    images: ["/opengraph-image"],
+  },
 };
 
 const tests = [
