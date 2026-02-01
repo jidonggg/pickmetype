@@ -30,11 +30,11 @@ const tests = [
   },
   {
     id: "celebrity-face",
-    emoji: "⭐",
+    emoji: "✨",
     title: "AI 닮은 연예인 찾기",
     subtitle: "사진 한 장으로 닮은 연예인 찾기!",
     available: true,
-    gradient: "from-amber-400 via-yellow-500 to-orange-500",
+    gradient: "from-violet-500 via-purple-600 to-indigo-600",
   },
   {
     id: "dubai-cookie",

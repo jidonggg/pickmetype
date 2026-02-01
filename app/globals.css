@@ -104,8 +104,8 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, #f59e0b, #eab308, #f59e0b, transparent);
-  box-shadow: 0 0 12px 4px rgba(245, 158, 11, 0.4);
+  background: linear-gradient(90deg, transparent, #a855f7, #8b5cf6, #a855f7, transparent);
+  box-shadow: 0 0 12px 4px rgba(139, 92, 246, 0.4);
   animation: scanLine 2s ease-in-out infinite;
   z-index: 10;
   pointer-events: none;

@@ -36,7 +36,7 @@ const OTHER_TESTS = [
 
 /* ==================== Floating Emojis ==================== */
 function FloatingEmojis() {
-  const emojis = ["⭐", "🌟", "✨", "💫", "🏆", "💎", "🎬", "🎤", "👑", "🌠"];
+  const emojis = ["✨", "💜", "🌟", "💎", "👑", "🔮", "🪩", "⭐", "💫", "🎭"];
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {emojis.map((emoji, i) => (
@@ -476,9 +476,9 @@ export default function CelebrityFaceEngine() {
   // Helper: get uniqueRate label and color
   const getUniqueLabel = (rate: number) => {
     if (rate < 25) return { label: "흔함", color: "#9CA3AF" };
-    if (rate < 50) return { label: "특별", color: "#3B82F6" };
-    if (rate < 75) return { label: "레어", color: "#8B5CF6" };
-    return { label: "전설급", color: "#F59E0B" };
+    if (rate < 50) return { label: "특별", color: "#8B5CF6" };
+    if (rate < 75) return { label: "레어", color: "#7C3AED" };
+    return { label: "전설급", color: "#6D28D9" };
   };
 
   // ========== INTRO ==========
@@ -487,29 +487,29 @@ export default function CelebrityFaceEngine() {
     const row2 = CELEBRITY_NAMES_CAROUSEL.slice(Math.ceil(CELEBRITY_NAMES_CAROUSEL.length / 2));
 
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center relative px-4 bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center relative px-4 bg-gradient-to-b from-slate-950 via-purple-950 to-indigo-950">
         <FloatingEmojis />
         <div className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center">
           <AdBanner />
 
           <div className="w-full mt-2 mb-6 text-center animate-fade-in">
-            <div className="text-7xl mb-5 animate-bounce-slow">⭐</div>
+            <div className="text-7xl mb-5 animate-bounce-slow">🪩</div>
 
             <h1
-              className="text-[2.5rem] leading-tight mb-3"
+              className="text-[2.5rem] leading-tight mb-3 text-white"
               style={{ fontFamily: "var(--font-display)" }}
             >
               AI 닮은
               <br />
               <span className="relative inline-block mt-1">
-                <span className="relative z-10 bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
+                <span className="relative z-10 bg-gradient-to-r from-fuchsia-400 via-purple-300 to-violet-400 bg-clip-text text-transparent">
                   연예인 찾기
                 </span>
-                <span className="absolute -bottom-1 left-0 right-0 h-3 bg-amber-200/60 -rotate-1 rounded" />
+                <span className="absolute -bottom-1 left-0 right-0 h-3 bg-purple-500/30 -rotate-1 rounded" />
               </span>
             </h1>
 
-            <p className="text-gray-600 text-[15px] mt-3 mb-4">
+            <p className="text-gray-300 text-[15px] mt-3 mb-4">
               사진 한 장으로 닮은 연예인을 찾아드려요!
             </p>
 
@@ -517,14 +517,14 @@ export default function CelebrityFaceEngine() {
             <div className="w-full overflow-hidden mb-5">
               <div className="flex gap-2 animate-scroll-left whitespace-nowrap mb-2">
                 {[...row1, ...row1].map((name, i) => (
-                  <span key={i} className="inline-block px-3 py-1 bg-amber-100/80 text-amber-700 rounded-full text-xs font-medium flex-shrink-0">
+                  <span key={i} className="inline-block px-3 py-1.5 bg-white/10 backdrop-blur-sm text-purple-200 rounded-full text-xs font-medium flex-shrink-0 border border-white/10">
                     {name}
                   </span>
                 ))}
               </div>
               <div className="flex gap-2 animate-scroll-right whitespace-nowrap">
                 {[...row2, ...row2].map((name, i) => (
-                  <span key={i} className="inline-block px-3 py-1 bg-orange-100/80 text-orange-700 rounded-full text-xs font-medium flex-shrink-0">
+                  <span key={i} className="inline-block px-3 py-1.5 bg-white/10 backdrop-blur-sm text-fuchsia-200 rounded-full text-xs font-medium flex-shrink-0 border border-white/10">
                     {name}
                   </span>
                 ))}
@@ -532,14 +532,14 @@ export default function CelebrityFaceEngine() {
             </div>
 
             {/* Trending Results */}
-            <div className="w-full bg-white/60 backdrop-blur-sm rounded-2xl p-3 mb-4 shadow-sm">
+            <div className="w-full bg-white/5 backdrop-blur-md rounded-2xl p-3 mb-4 border border-white/10">
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-xs font-bold text-amber-600">실시간 인기 결과</span>
-                <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-xs font-bold text-purple-300">실시간 인기 결과</span>
+                <span className="w-1.5 h-1.5 bg-fuchsia-400 rounded-full animate-pulse" />
               </div>
               <div className="flex flex-wrap gap-1.5 justify-center">
                 {trendingCelebs.map((name, i) => (
-                  <span key={`${name}-${i}`} className="px-3 py-1 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full text-xs font-medium text-gray-700 transition-all">
+                  <span key={`${name}-${i}`} className="px-3 py-1 bg-purple-500/20 border border-purple-400/30 rounded-full text-xs font-medium text-purple-100 transition-all">
                     {name}
                   </span>
                 ))}
@@ -547,39 +547,39 @@ export default function CelebrityFaceEngine() {
             </div>
 
             {/* Participant Count */}
-            <p className="text-xs text-gray-500 mb-4">
-              지금까지 <span className="font-bold text-amber-600">{participantCount.toLocaleString()}</span>명이 참여했어요!
+            <p className="text-xs text-gray-400 mb-4">
+              지금까지 <span className="font-bold text-purple-300">{participantCount.toLocaleString()}</span>명이 참여했어요!
             </p>
 
             {/* Feature Cards */}
             <div className="w-full grid grid-cols-3 gap-2 mb-5 px-1">
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.1s" }}>
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-3 text-center border border-white/10 animate-scale-in" style={{ animationDelay: "0.1s" }}>
                 <div className="text-2xl mb-1">🎬</div>
-                <p className="text-[11px] font-bold text-gray-700">60+ 연예인 DB</p>
-                <p className="text-[10px] text-gray-400">아이돌+배우</p>
+                <p className="text-[11px] font-bold text-gray-200">60+ 연예인 DB</p>
+                <p className="text-[10px] text-gray-500">아이돌+배우</p>
               </div>
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.2s" }}>
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-3 text-center border border-white/10 animate-scale-in" style={{ animationDelay: "0.2s" }}>
                 <div className="text-2xl mb-1">🤖</div>
-                <p className="text-[11px] font-bold text-gray-700">AI 얼굴 분석</p>
-                <p className="text-[10px] text-gray-400">정밀 대조</p>
+                <p className="text-[11px] font-bold text-gray-200">AI 얼굴 분석</p>
+                <p className="text-[10px] text-gray-500">정밀 대조</p>
               </div>
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-3 text-center shadow-sm animate-scale-in" style={{ animationDelay: "0.3s" }}>
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-3 text-center border border-white/10 animate-scale-in" style={{ animationDelay: "0.3s" }}>
                 <div className="text-2xl mb-1">💎</div>
-                <p className="text-[11px] font-bold text-gray-700">희귀도 측정</p>
-                <p className="text-[10px] text-gray-400">0~100%</p>
+                <p className="text-[11px] font-bold text-gray-200">희귀도 측정</p>
+                <p className="text-[10px] text-gray-500">0~100%</p>
               </div>
             </div>
           </div>
 
           <button
             onClick={handleStart}
-            className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white text-xl font-bold rounded-2xl shadow-lg shadow-amber-200/50 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 animate-pulse-soft mb-3"
+            className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 text-white text-xl font-bold rounded-2xl shadow-lg shadow-purple-500/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 animate-pulse-soft mb-3 border border-purple-400/30"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            ⭐ 내 닮은꼴 찾기
+            ✨ 내 닮은꼴 찾기
           </button>
 
-          <p className="text-xs text-gray-400 mt-3 mb-6 pb-safe">
+          <p className="text-xs text-gray-500 mt-3 mb-6 pb-safe">
             결과는 재미로만 봐주세요 :)
           </p>
         </div>
@@ -603,7 +603,7 @@ export default function CelebrityFaceEngine() {
   // ========== UPLOAD ==========
   if (phase === "upload") {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center relative px-4 bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50">
+      <div className="min-h-[100dvh] flex flex-col items-center relative px-4 bg-gradient-to-b from-gray-50 via-white to-purple-50">
         <FloatingEmojis />
         <div className="relative z-10 w-full max-w-md mx-auto py-8">
           <button
@@ -614,10 +614,10 @@ export default function CelebrityFaceEngine() {
           </button>
 
           <h2
-            className="text-2xl text-center mb-2"
+            className="text-2xl text-center mb-2 text-gray-900"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            사진을 올려주세요 ⭐
+            사진을 올려주세요 ✨
           </h2>
           <p className="text-center text-gray-500 text-sm mb-4">
             얼굴이 잘 보이는 사진일수록 정확해요!
@@ -625,9 +625,9 @@ export default function CelebrityFaceEngine() {
 
           {/* Tips */}
           <div className="flex gap-2 justify-center mb-5">
-            <span className="px-3 py-1 bg-amber-100/80 text-amber-700 rounded-full text-[11px] font-medium">정면 셀카</span>
-            <span className="px-3 py-1 bg-amber-100/80 text-amber-700 rounded-full text-[11px] font-medium">자연스러운 표정</span>
-            <span className="px-3 py-1 bg-amber-100/80 text-amber-700 rounded-full text-[11px] font-medium">얼굴 전체</span>
+            <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-[11px] font-medium">정면 셀카</span>
+            <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-[11px] font-medium">자연스러운 표정</span>
+            <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-[11px] font-medium">얼굴 전체</span>
           </div>
 
           {/* Upload Area */}
@@ -635,7 +635,7 @@ export default function CelebrityFaceEngine() {
             <>
               <div
                 ref={imgContainerRef}
-                className="w-full aspect-square max-w-sm mx-auto rounded-3xl border-2 border-amber-300 bg-black/5 overflow-hidden select-none"
+                className="w-full aspect-square max-w-sm mx-auto rounded-3xl border-2 border-purple-300 bg-black/5 overflow-hidden select-none"
                 style={{ touchAction: "none", cursor: zoom > 1 ? (isDragging ? "grabbing" : "grab") : "default" }}
                 onMouseDown={(e) => { e.preventDefault(); handlePanStart(e.clientX, e.clientY); }}
                 onMouseMove={(e) => handlePanMove(e.clientX, e.clientY)}
@@ -662,7 +662,7 @@ export default function CelebrityFaceEngine() {
               <div className="w-full max-w-sm mx-auto mt-3 flex items-center gap-3 px-2">
                 <button
                   onClick={() => handleZoomChange(zoom - 0.25)}
-                  className="w-9 h-9 flex items-center justify-center bg-white/80 rounded-full shadow-sm border border-amber-200 text-amber-600 font-bold text-lg hover:bg-amber-50 transition-colors"
+                  className="w-9 h-9 flex items-center justify-center bg-white/80 rounded-full shadow-sm border border-purple-200 text-purple-600 font-bold text-lg hover:bg-purple-50 transition-colors"
                 >
                   −
                 </button>
@@ -673,23 +673,23 @@ export default function CelebrityFaceEngine() {
                   step="0.05"
                   value={zoom}
                   onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
-                  className="flex-1 h-2 bg-amber-100 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-amber-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer"
+                  className="flex-1 h-2 bg-purple-100 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer"
                 />
                 <button
                   onClick={() => handleZoomChange(zoom + 0.25)}
-                  className="w-9 h-9 flex items-center justify-center bg-white/80 rounded-full shadow-sm border border-amber-200 text-amber-600 font-bold text-lg hover:bg-amber-50 transition-colors"
+                  className="w-9 h-9 flex items-center justify-center bg-white/80 rounded-full shadow-sm border border-purple-200 text-purple-600 font-bold text-lg hover:bg-purple-50 transition-colors"
                 >
                   +
                 </button>
                 <span className="text-xs text-gray-400 w-10 text-right">{Math.round(zoom * 100)}%</span>
               </div>
               {zoom > 1 && (
-                <p className="text-xs text-amber-400 text-center mt-1">드래그하여 위치를 조절하세요</p>
+                <p className="text-xs text-purple-400 text-center mt-1">드래그하여 위치를 조절하세요</p>
               )}
             </>
           ) : (
             <div
-              className="w-full aspect-square max-w-sm mx-auto rounded-3xl border-2 border-dashed border-amber-300 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center cursor-pointer hover:border-amber-500 hover:bg-white/80 transition-all overflow-hidden"
+              className="w-full aspect-square max-w-sm mx-auto rounded-3xl border-2 border-dashed border-purple-300 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 hover:bg-white/80 transition-all overflow-hidden"
               onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
               onDrop={(e) => {
@@ -723,15 +723,15 @@ export default function CelebrityFaceEngine() {
             <div className="flex gap-3 mt-4">
               <button
                 onClick={() => { setUploadPreview(null); setZoom(1); setPanPos({ x: 0, y: 0 }); fileInputRef.current?.click(); }}
-                className="flex-1 py-3 bg-white/80 text-amber-600 font-bold rounded-2xl border-2 border-amber-200 hover:border-amber-400 transition-all text-sm"
+                className="flex-1 py-3 bg-white/80 text-purple-600 font-bold rounded-2xl border-2 border-purple-200 hover:border-purple-400 transition-all text-sm"
               >
                 다시 선택
               </button>
               <button
                 onClick={handleAnalyzePhoto}
-                className="flex-1 py-3 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all text-sm"
+                className="flex-1 py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all text-sm"
               >
-                분석하기 ⭐
+                분석하기 ✨
               </button>
             </div>
           )}
@@ -743,15 +743,15 @@ export default function CelebrityFaceEngine() {
   // ========== ANALYZING ==========
   if (phase === "analyzing") {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center relative px-4 bg-gradient-to-b from-gray-900 via-amber-950 to-gray-900">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center relative px-4 bg-gradient-to-b from-gray-950 via-purple-950 to-gray-950">
         <div className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center text-center">
 
           {/* Photo with scan line */}
           {uploadPreview && (
-            <div className="relative w-40 h-40 rounded-2xl overflow-hidden mb-6 border-2 border-amber-500/50">
+            <div className="relative w-40 h-40 rounded-2xl overflow-hidden mb-6 border-2 border-purple-500/50">
               <img src={uploadPreview} alt="Analyzing" className="w-full h-full object-cover" />
               <div className="scan-line" />
-              <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent" />
             </div>
           )}
 
@@ -766,9 +766,9 @@ export default function CelebrityFaceEngine() {
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-all duration-500 ${
                     i < analysisStep
-                      ? "bg-amber-500 text-white"
+                      ? "bg-purple-500 text-white"
                       : i === analysisStep
-                      ? "bg-yellow-500 text-white animate-pulse"
+                      ? "bg-fuchsia-500 text-white animate-pulse"
                       : "bg-gray-600 text-gray-400"
                   }`}
                 >
@@ -787,12 +787,12 @@ export default function CelebrityFaceEngine() {
 
           <div className="w-48 h-1 bg-gray-700 rounded-full overflow-hidden mb-4">
             <div
-              className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-1000"
+              className="h-full bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full transition-all duration-1000"
               style={{ width: `${((analysisStep + 1) / ANALYSIS_STEPS.length) * 100}%` }}
             />
           </div>
 
-          <p className="text-amber-300 text-sm animate-pulse mb-2">
+          <p className="text-purple-300 text-sm animate-pulse mb-2">
             {loadingComment}
           </p>
 
@@ -818,22 +818,22 @@ export default function CelebrityFaceEngine() {
     const uniqueInfo = getUniqueLabel(result.uniqueRate);
 
     return (
-      <div className="min-h-[100dvh] relative bg-gradient-to-b from-amber-50 via-white to-orange-50">
+      <div className="min-h-[100dvh] relative bg-gradient-to-b from-gray-50 via-white to-purple-50/50">
 
         {/* Hidden share card */}
         <div ref={shareCardRef} aria-hidden="true" style={{ position: "fixed", left: -9999, top: 0, width: 540, height: 720 }}>
-          <div style={{ width: 540, height: 720, background: "linear-gradient(160deg, #FEF3C7 0%, #fff 50%, #FFEDD5 100%)", display: "flex", flexDirection: "column", alignItems: "center", padding: "0 36px", position: "relative", fontFamily: "'Noto Sans KR', sans-serif" }}>
+          <div style={{ width: 540, height: 720, background: "linear-gradient(160deg, #EDE9FE 0%, #fff 50%, #F3E8FF 100%)", display: "flex", flexDirection: "column", alignItems: "center", padding: "0 36px", position: "relative", fontFamily: "'Noto Sans KR', sans-serif" }}>
             <div style={{ width: "100%", textAlign: "center", paddingTop: 24, marginBottom: 12 }}>
               <p style={{ fontSize: 16, fontWeight: 900, fontFamily: "'Black Han Sans', sans-serif", color: "#333" }}>
-                pick<span style={{ color: "#F59E0B" }}>me</span>type
+                pick<span style={{ color: "#7C3AED" }}>me</span>type
               </p>
             </div>
             <p style={{ fontSize: 12, color: "#999", letterSpacing: 4, fontWeight: 500, marginBottom: 16 }}>나의 닮은 연예인은</p>
             <div style={{ position: "relative", marginBottom: 16 }}>
               {userPhoto ? (
-                <div style={{ width: 160, height: 160, borderRadius: "50%", border: "4px solid #F59E0B", boxShadow: "0 8px 30px rgba(0,0,0,0.12)", backgroundImage: `url(${userPhoto})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+                <div style={{ width: 160, height: 160, borderRadius: "50%", border: "4px solid #7C3AED", boxShadow: "0 8px 30px rgba(124,58,237,0.2)", backgroundImage: `url(${userPhoto})`, backgroundSize: "cover", backgroundPosition: "center" }} />
               ) : (
-                <div style={{ width: 160, height: 160, borderRadius: "50%", background: "linear-gradient(135deg, #FEF3C7, #FFEDD5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 72, border: "4px solid #F59E0B" }}>⭐</div>
+                <div style={{ width: 160, height: 160, borderRadius: "50%", background: "linear-gradient(135deg, #EDE9FE, #F3E8FF)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 72, border: "4px solid #7C3AED" }}>✨</div>
               )}
               {top1Celeb && (
                 <div style={{ position: "absolute", bottom: -4, right: -4, fontSize: 48, lineHeight: 1, filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.2))" }}>{top1Celeb.imageEmoji}</div>
@@ -841,8 +841,8 @@ export default function CelebrityFaceEngine() {
             </div>
             {top1Celeb && (
               <>
-                <h2 style={{ fontSize: 28, fontWeight: 900, color: "#F59E0B", marginBottom: 2, fontFamily: "'Black Han Sans', sans-serif" }}>{top1Celeb.name}</h2>
-                <p style={{ fontSize: 14, fontWeight: 700, color: "#D97706", marginBottom: 14 }}>{top1Celeb.group}</p>
+                <h2 style={{ fontSize: 28, fontWeight: 900, color: "#7C3AED", marginBottom: 2, fontFamily: "'Black Han Sans', sans-serif" }}>{top1Celeb.name}</h2>
+                <p style={{ fontSize: 14, fontWeight: 700, color: "#6D28D9", marginBottom: 14 }}>{top1Celeb.group}</p>
               </>
             )}
             <div style={{ width: "100%", marginBottom: 14 }}>
@@ -853,27 +853,27 @@ export default function CelebrityFaceEngine() {
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
                     <span style={{ fontSize: 13, width: 80, textAlign: "right" }}>{c.imageEmoji} {c.name}</span>
                     <div style={{ flex: 1, height: 12, background: "rgba(0,0,0,0.06)", borderRadius: 6, overflow: "hidden" }}>
-                      <div style={{ width: `${m.percentage}%`, height: "100%", background: i === 0 ? "#F59E0B" : i === 1 ? "#FBBF24" : "#FCD34D", borderRadius: 6 }} />
+                      <div style={{ width: `${m.percentage}%`, height: "100%", background: i === 0 ? "#7C3AED" : i === 1 ? "#8B5CF6" : "#A78BFA", borderRadius: 6 }} />
                     </div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#D97706", width: 34, textAlign: "right" }}>{m.percentage}%</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#6D28D9", width: 34, textAlign: "right" }}>{m.percentage}%</span>
                   </div>
                 );
               })}
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 5, justifyContent: "center", marginBottom: 14 }}>
               {result.overallVibe.map((vibe, i) => (
-                <span key={i} style={{ background: "#F59E0B", color: "#fff", padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 600 }}>#{vibe}</span>
+                <span key={i} style={{ background: "#7C3AED", color: "#fff", padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 600 }}>#{vibe}</span>
               ))}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <span style={{ fontSize: 12, color: "#999" }}>희귀도</span>
               <div style={{ width: 120, height: 8, background: "#f0f0f0", borderRadius: 4, overflow: "hidden" }}>
-                <div style={{ width: `${result.uniqueRate}%`, height: "100%", background: `linear-gradient(90deg, #FBBF24, ${uniqueInfo.color})`, borderRadius: 4 }} />
+                <div style={{ width: `${result.uniqueRate}%`, height: "100%", background: `linear-gradient(90deg, #C4B5FD, ${uniqueInfo.color})`, borderRadius: 4 }} />
               </div>
               <span style={{ fontSize: 12, fontWeight: 700, color: uniqueInfo.color }}>{result.uniqueRate}% {uniqueInfo.label}</span>
             </div>
             <div style={{ position: "absolute", bottom: 20, width: "calc(100% - 72px)", textAlign: "center" }}>
-              <div style={{ background: "linear-gradient(90deg, #F59E0B, #EAB308)", color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 6 }}>나도 테스트하기 → pickmetype.vercel.app</div>
+              <div style={{ background: "linear-gradient(90deg, #7C3AED, #8B5CF6)", color: "#fff", borderRadius: 12, padding: "10px 0", fontSize: 14, fontWeight: 700, marginBottom: 6 }}>나도 테스트하기 → pickmetype.vercel.app</div>
               <p style={{ fontSize: 11, color: "#bbb" }}>AI 닮은 연예인 찾기</p>
             </div>
           </div>
@@ -886,35 +886,35 @@ export default function CelebrityFaceEngine() {
             <p className="text-sm text-gray-500 mb-3 font-medium tracking-wide">당신의 닮은 연예인은...</p>
             <div className="flex items-center justify-center gap-4 mb-4">
               {userPhoto ? (
-                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-amber-300 shadow-lg">
+                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-purple-300 shadow-lg shadow-purple-200/30">
                   <img src={userPhoto} alt="You" className="w-full h-full object-cover" />
                 </div>
               ) : (
-                <div className="w-24 h-24 rounded-2xl bg-amber-100 flex items-center justify-center text-4xl border-2 border-amber-300">😊</div>
+                <div className="w-24 h-24 rounded-2xl bg-purple-100 flex items-center justify-center text-4xl border-2 border-purple-300">😊</div>
               )}
-              <div className="text-2xl font-bold text-amber-500">=</div>
+              <div className="text-2xl font-bold text-purple-500">=</div>
               {top1Celeb && (
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 flex flex-col items-center justify-center border-2 border-amber-400 shadow-lg">
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-violet-100 to-purple-100 flex flex-col items-center justify-center border-2 border-purple-400 shadow-lg shadow-purple-200/30">
                   <span className="text-3xl mb-1">{top1Celeb.imageEmoji}</span>
-                  <span className="text-[10px] font-bold text-amber-700">{top1Celeb.name}</span>
+                  <span className="text-[10px] font-bold text-purple-700">{top1Celeb.name}</span>
                 </div>
               )}
             </div>
             {top1Celeb && (
               <>
-                <h1 className="text-3xl mb-1" style={{ fontFamily: "var(--font-display)", color: "#D97706" }}>
+                <h1 className="text-3xl mb-1" style={{ fontFamily: "var(--font-display)", color: "#7C3AED" }}>
                   {top1Celeb.imageEmoji} {top1Celeb.name}
                 </h1>
-                <p className="text-sm font-bold text-amber-600 mb-1">{top1Celeb.group}</p>
-                <p className="text-lg font-bold text-amber-500">{top1Match.percentage}% 매칭!</p>
+                <p className="text-sm font-bold text-purple-600 mb-1">{top1Celeb.group}</p>
+                <p className="text-lg font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">{top1Match.percentage}% 매칭!</p>
               </>
             )}
           </div>
 
           {/* 2. Same Gender TOP 5 */}
-          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.06s" }}>
-            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
-              {result.gender === "female" ? "여자" : "남자"} 연예인 TOP 5 ⭐
+          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up border border-purple-100/50" style={{ animationDelay: "0.06s" }}>
+            <h3 className="text-lg font-bold mb-3 text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
+              {result.gender === "female" ? "여자" : "남자"} 연예인 TOP 5 ✨
             </h3>
             <div className="space-y-3">
               {result.sameGenderTop5.map((m, i) => {
@@ -924,12 +924,12 @@ export default function CelebrityFaceEngine() {
                   <div key={i}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium flex items-center gap-1.5">
-                        {i === 0 && <span className="text-amber-500">👑</span>}
+                        {i === 0 && <span className="text-purple-500">👑</span>}
                         <span className="text-gray-500 text-xs w-5">{i + 1}위</span>
                         {celeb.imageEmoji} {celeb.name}
                         <span className="text-[10px] text-gray-400">({celeb.group})</span>
                       </span>
-                      <span className="text-sm font-bold text-amber-600">
+                      <span className="text-sm font-bold text-purple-600">
                         {m.percentage}%
                       </span>
                     </div>
@@ -938,7 +938,7 @@ export default function CelebrityFaceEngine() {
                         className="h-full rounded-full transition-all duration-1000"
                         style={{
                           width: `${m.percentage}%`,
-                          backgroundColor: i === 0 ? "#F59E0B" : i === 1 ? "#FBBF24" : i === 2 ? "#FCD34D" : "#FDE68A",
+                          backgroundColor: i === 0 ? "#8B5CF6" : i === 1 ? "#A78BFA" : i === 2 ? "#C4B5FD" : "#DDD6FE",
                         }}
                       />
                     </div>
@@ -949,8 +949,8 @@ export default function CelebrityFaceEngine() {
           </div>
 
           {/* 3. Opposite Gender TOP 2 */}
-          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
+          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up border border-purple-100/50" style={{ animationDelay: "0.1s" }}>
+            <h3 className="text-lg font-bold mb-3 text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
               {result.gender === "female" ? "남자" : "여자"} 연예인 닮은꼴 TOP 2 💕
             </h3>
             <div className="space-y-3">
@@ -958,12 +958,12 @@ export default function CelebrityFaceEngine() {
                 const celeb = celebrities[m.celebrityId];
                 if (!celeb) return null;
                 return (
-                  <div key={i} className="bg-gradient-to-r from-pink-50 to-amber-50 rounded-2xl p-4 border border-amber-100">
+                  <div key={i} className="bg-gradient-to-r from-pink-50 to-violet-50 rounded-2xl p-4 border border-purple-100">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-3xl">{celeb.imageEmoji}</span>
                       <div className="flex-1">
                         <p className="font-bold text-gray-800">{celeb.name} <span className="text-xs text-gray-400">({celeb.group})</span></p>
-                        <p className="text-sm text-amber-600 font-medium">{m.percentage}% 매칭</p>
+                        <p className="text-sm text-purple-600 font-medium">{m.percentage}% 매칭</p>
                       </div>
                     </div>
                     {m.appealPoint && (
@@ -976,8 +976,8 @@ export default function CelebrityFaceEngine() {
           </div>
 
           {/* 4. Face Analysis */}
-          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.14s" }}>
-            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
+          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up border border-purple-100/50" style={{ animationDelay: "0.14s" }}>
+            <h3 className="text-lg font-bold mb-3 text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
               얼굴 정밀 분석 🔍
             </h3>
             <div className="space-y-3">
@@ -1002,10 +1002,10 @@ export default function CelebrityFaceEngine() {
                   <p className="text-sm text-gray-700">{result.faceAnalysis.lips}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 bg-amber-50 p-3 rounded-xl">
+              <div className="flex items-start gap-3 bg-purple-50 p-3 rounded-xl">
                 <span className="text-lg mt-0.5">🔲</span>
                 <div>
-                  <p className="text-xs font-bold text-amber-600 mb-0.5">얼굴형</p>
+                  <p className="text-xs font-bold text-purple-600 mb-0.5">얼굴형</p>
                   <p className="text-sm text-gray-700">{result.faceAnalysis.faceShape}</p>
                 </div>
               </div>
@@ -1013,8 +1013,8 @@ export default function CelebrityFaceEngine() {
           </div>
 
           {/* 5. Overall Vibe */}
-          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.18s" }}>
-            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
+          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up border border-purple-100/50" style={{ animationDelay: "0.18s" }}>
+            <h3 className="text-lg font-bold mb-3 text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
               전체 분위기 ✨
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -1022,7 +1022,7 @@ export default function CelebrityFaceEngine() {
                 <span
                   key={i}
                   className="px-4 py-2 rounded-full text-sm font-medium text-white"
-                  style={{ backgroundColor: ["#F59E0B", "#EAB308", "#D97706", "#B45309", "#92400E"][i % 5] }}
+                  style={{ backgroundColor: ["#7C3AED", "#8B5CF6", "#6D28D9", "#A855F7", "#9333EA"][i % 5] }}
                 >
                   #{vibe}
                 </span>
@@ -1031,8 +1031,8 @@ export default function CelebrityFaceEngine() {
           </div>
 
           {/* 6. Style Recommendation */}
-          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.22s" }}>
-            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
+          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up border border-purple-100/50" style={{ animationDelay: "0.22s" }}>
+            <h3 className="text-lg font-bold mb-3 text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
               스타일 추천 💄
             </h3>
             <div className="space-y-3">
@@ -1061,8 +1061,8 @@ export default function CelebrityFaceEngine() {
           </div>
 
           {/* 7. Unique Rate Meter */}
-          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.26s" }}>
-            <h3 className="text-lg font-bold mb-3" style={{ fontFamily: "var(--font-display)" }}>
+          <div className="w-full bg-white/80 backdrop-blur-sm rounded-3xl p-5 shadow-lg mb-4 animate-slide-up border border-purple-100/50" style={{ animationDelay: "0.26s" }}>
+            <h3 className="text-lg font-bold mb-3 text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
               희귀도 💎
             </h3>
             <div className="relative">
@@ -1071,7 +1071,7 @@ export default function CelebrityFaceEngine() {
                   className="h-full rounded-full transition-all duration-1000"
                   style={{
                     width: `${result.uniqueRate}%`,
-                    background: `linear-gradient(90deg, #FCD34D, ${uniqueInfo.color})`,
+                    background: `linear-gradient(90deg, #C4B5FD, ${uniqueInfo.color})`,
                   }}
                 />
               </div>
@@ -1093,10 +1093,10 @@ export default function CelebrityFaceEngine() {
           </div>
 
           {/* 8. AI Comment */}
-          <div className="w-full bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.3s" }}>
+          <div className="w-full bg-gradient-to-r from-violet-50 to-purple-50 border border-purple-200 rounded-3xl p-5 shadow-lg mb-4 animate-slide-up" style={{ animationDelay: "0.3s" }}>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">🤖</span>
-              <h3 className="text-lg font-bold" style={{ fontFamily: "var(--font-display)" }}>
+              <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
                 AI 코멘트
               </h3>
             </div>
@@ -1115,7 +1115,7 @@ export default function CelebrityFaceEngine() {
             </h3>
             <button
               onClick={saveResultImage}
-              className="quiz-btn w-full py-3 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white rounded-2xl font-bold text-sm mb-3 transition-all hover:shadow-lg"
+              className="quiz-btn w-full py-3 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 text-white rounded-2xl font-bold text-sm mb-3 transition-all hover:shadow-lg"
             >
               📸 이미지 저장하기
             </button>
@@ -1156,7 +1156,7 @@ export default function CelebrityFaceEngine() {
           {/* 10. Restart + Other Tests */}
           <button
             onClick={handleRestart}
-            className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white text-lg font-bold rounded-2xl shadow-lg shadow-amber-200/50 hover:shadow-xl transition-all duration-300 mb-5"
+            className="quiz-btn w-full max-w-xs py-4 px-8 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 text-white text-lg font-bold rounded-2xl shadow-lg shadow-purple-500/25 hover:shadow-xl transition-all duration-300 mb-5"
             style={{ fontFamily: "var(--font-display)" }}
           >
             다시 하기 🔄
@@ -1176,7 +1176,7 @@ export default function CelebrityFaceEngine() {
                   <span className="text-3xl">{t.emoji}</span>
                   <div className="flex-1">
                     <p className="font-bold text-gray-800 text-[15px]">{t.title}</p>
-                    <p className="text-xs text-amber-500 font-bold">{t.desc}</p>
+                    <p className="text-xs text-purple-500 font-bold">{t.desc}</p>
                   </div>
                 </Link>
               ))}
