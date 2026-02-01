@@ -38,7 +38,7 @@ const ANALYSIS_STEPS = [
 ];
 
 const OTHER_TESTS = [
-  { emoji: "🍪", title: "나는 어떤 두츀쿠?", desc: "두바이 츀득 쿠키 성격 테스트", href: "/dubai-cookie" },
+  { emoji: "🍪", title: "나는 어떤 두쫀쿠?", desc: "두바이 쫀득 쿠키 성격 테스트", href: "/dubai-cookie" },
   { emoji: "⚔️", title: "나의 멘탈 HP 측정기", desc: "RPG 스탯으로 보는 내 멘탈!", href: "/mental-hp" },
   { emoji: "💰", title: "나의 시가총액 측정기", desc: "내가 회사라면 시가총액은?", href: "/market-cap" },
 ];
